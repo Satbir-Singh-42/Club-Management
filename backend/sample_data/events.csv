@@ -1,0 +1,6 @@
+name,description,rules,date,time,venue,poster,team_size,club_id
+Event Alpha,Description Alpha,Rules Alpha,2023-10-01,12:00:00,Venue X,storage/posters/1.png,1,1
+Event Beta,Description Beta,Rules Beta,2023-10-02,13:00:00,Venue Y,storage/posters/2.png,2,2
+Event Gamma,Description Gamma,Rules Gamma,2023-10-03,14:00:00,Venue X,storage/posters/3.png,2,1
+Event Delta,Description Delta,Rules Delta,2023-10-04,15:00:00,Venue Z,storage/posters/4.png,3,2
+Event Alpha,Description Epsilon,Rules Epsilon,2023-10-05,16:00:00,Venue Y,storage/posters/5.png,3,1

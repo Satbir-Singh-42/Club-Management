@@ -1,0 +1,75 @@
+/* Card container */
+.event-card {
+  @apply w-[600px] h-[338px] mt-5 py-2 bg-white rounded-xl flex flex-col space-y-4;
+}
+
+/* Header section as grid */
+.event-header {
+  @apply px-2 grid grid-cols-[auto,1fr,auto] gap-4 items-center;
+}
+
+/* Left Section: Club Logo */
+.event-logo-container {
+  @apply flex justify-center items-center;
+}
+
+.event-logo {
+  @apply w-12 h-12 rounded-full object-cover;
+}
+
+/* Middle Section: Event Details */
+.event-details {
+  @apply flex flex-col text-gray-700;
+}
+
+.event-type {
+  @apply w-[150px] text-xs bg-[#FCFCFC] border-2 border-[#E6EBEC] rounded-full px-1 uppercase text-center font-semibold;
+}
+
+.event-name {
+  @apply text-lg font-bold ;
+}
+
+.event-date-time {
+  @apply text-xs text-[#8E989C] ;
+}
+
+.club-name {
+  @apply text-xs text-[#8E989C] font-semibold;
+}
+
+/* Right Section: Instagram Icon */
+.instagram-container {
+  @apply flex justify-end;
+}
+
+.instagram-icon {
+  @apply w-8 h-8;
+  
+}
+
+/* Description section */
+.event-description {
+  @apply h-[166px] bg-[#fcfcfc] w-full font-medium text-center overflow-hidden px-2;
+}
+
+/* Footer section */
+.event-footer {
+  @apply px-4 flex items-center text-gray-600;
+}
+
+.days-left {
+  @apply text-sm flex items-center;
+}
+
+.event-actions {
+  @apply flex;
+}
+
+.read-more-button {
+  @apply bg-blue-500 text-white py-2 px-4 rounded-md shadow hover:bg-blue-600;
+}
+
+.apply-button {
+  @apply bg-blue-500 text-white py-2 px-4 rounded-md shadow hover:bg-blue-600;
+}

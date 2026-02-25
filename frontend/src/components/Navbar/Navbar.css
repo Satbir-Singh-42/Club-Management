@@ -1,0 +1,26 @@
+/* navbar.css */
+
+/* Custom styles for navbar */
+nav {
+    background-color: #ffffff;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px;
+  }
+  
+  button:hover {
+    background-color: #e0e0e0;
+  }
+  
+  button:focus {
+    outline: none;
+  }
+  
+  /* Specific styles for buttons */
+  .btn-primary {
+    background-color: #3770ff;
+    color: white;
+    border-radius: 8px;
+  }
+  
+  .btn-primary:hover {
+    background-color: #1d57d2;
+  }

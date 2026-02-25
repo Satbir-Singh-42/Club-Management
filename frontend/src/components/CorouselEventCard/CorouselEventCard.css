@@ -1,0 +1,66 @@
+/* Card container */
+.corousel-event-card {
+    @apply w-[500px] h-[275px] mt-5 py-2 bg-white rounded-lg flex flex-col space-y-4;
+  }
+  
+  /* Header section as grid */
+  .corousel-event-header {
+    @apply px-2 grid grid-cols-[1fr,auto] gap-4 items-center;
+  }
+  
+  /* Middle Section: Event Details */
+  .corousel-event-details {
+    @apply flex flex-col text-gray-700 pl-3 pt-3;
+  }
+  
+  .corousel-event-type {
+    @apply w-[150px] text-xs bg-[#FCFCFC] border-2 border-[#E6EBEC] rounded-full px-1 uppercase text-center font-semibold;
+  }
+  
+  .corousel-event-name {
+    @apply text-lg font-bold ;
+  }
+  
+  .corousel-event-date-time {
+    @apply text-xs text-[#8E989C] ;
+  }
+  
+  .corousel-club-name {
+    @apply text-xs text-[#8E989C] font-semibold;
+  }
+  
+  /* Right Section: Instagram Icon */
+  .corousel-instagram-container {
+    @apply flex justify-end;
+  }
+  
+  .corousel-instagram-icon {
+    @apply w-6 h-6;
+  }
+  
+  /* Description section */
+  .corousel-event-description {
+    @apply h-[166px] bg-[#fcfcfc] w-full font-medium text-center overflow-hidden px-2;
+  }
+  
+  /* Footer section */
+  .corousel-event-footer {
+    @apply px-4 flex items-center justify-between text-gray-600;
+  }
+  
+  .corousel-days-left {
+    @apply text-sm flex items-center;
+  }
+  
+  .corousel-event-actions {
+    @apply flex space-x-4;
+  }
+  
+  .corousel-read-more-button {
+    @apply bg-blue-500 text-white py-2 px-4 rounded-md shadow hover:bg-blue-600;
+  }
+  
+  .corousel-apply-button {
+    @apply bg-blue-500 text-white py-2 px-4 rounded-md shadow hover:bg-blue-600;
+  }
+  

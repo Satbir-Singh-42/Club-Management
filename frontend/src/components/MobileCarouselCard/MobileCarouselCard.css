@@ -1,0 +1,81 @@
+/* Card container */
+.mobile-event-card {
+    @apply !w-[600px] h-[338px] mt-5 py-2 bg-white rounded-lg flex flex-col space-y-4;
+  }
+  
+  @media (max-width:660px) {
+    .mobile-event-card {
+      @apply !w-[90%] m-auto;
+    }
+  }
+  
+  /* Header section as grid */
+  .mobile-event-header {
+    @apply px-2 grid grid-cols-[auto,1fr,auto] gap-4 items-center;
+  }
+  
+  /* Left Section: Club Logo */
+  .mobile-event-logo-container {
+    @apply flex justify-center items-center;
+  }
+  
+  .mobile-event-logo {
+    @apply w-12 h-12 rounded-full object-cover;
+  }
+  
+  /* Middle Section: Event Details */
+  .mobile-event-details {
+    @apply flex flex-col text-gray-700;
+  }
+  
+  .mobile-event-type {
+    @apply w-[150px] text-xs bg-[#FCFCFC] border-2 border-[#E6EBEC] rounded-full px-1 uppercase text-center font-semibold;
+  }
+  
+  .mobile-event-name {
+    @apply text-lg font-bold ;
+  }
+  
+  .mobile-event-date-time {
+    @apply text-xs text-[#8E989C] ;
+  }
+  
+  .mobile-club-name {
+    @apply text-xs text-[#8E989C] font-semibold;
+  }
+  
+  /* Right Section: Instagram Icon */
+  .mobile-instagram-container {
+    @apply flex justify-end;
+  }
+  
+  .mobile-instagram-icon {
+    @apply w-6 h-6;
+  }
+  
+  /* Description section */
+  .mobile-event-description {
+    @apply h-[166px] bg-[#fcfcfc] w-full font-medium text-center overflow-hidden px-2;
+  }
+  
+  /* Footer section */
+  .mobile-event-footer {
+    @apply px-4 flex items-center justify-between text-gray-600;
+  }
+  
+  .mobile-days-left {
+    @apply text-sm flex items-center;
+  }
+  
+  .mobile-event-actions {
+    @apply flex space-x-4;
+  }
+  
+  .mobile-read-more-button {
+    @apply bg-blue-500 text-white py-2 px-2 rounded-md shadow hover:bg-blue-600;
+  }
+  
+  .mobile-apply-button {
+    @apply bg-blue-500 text-white py-2 px-2 rounded-md shadow hover:bg-blue-600;
+  }
+  

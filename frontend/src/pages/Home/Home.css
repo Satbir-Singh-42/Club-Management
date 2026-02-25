@@ -1,0 +1,19 @@
+/* Home page container */
+
+.home-page {
+    @apply bg-[#F5F7F7] m-0 p-0 overflow-hidden w-full;;
+  }
+  
+  .home-heading {
+    @apply text-3xl font-bold text-gray-800 text-center mb-8;
+  }
+  
+  /* Grid layout for cards */
+  .events-grid {
+    @apply grid justify-items-center grid-cols-1 sm:grid-cols-1 lg:grid-cols-2;
+  }
+
+  .loading-img {
+    filter: invert(20%) sepia(90%) saturate(2000%) hue-rotate(190deg) brightness(100%) contrast(90%);
+  }
+

@@ -1,0 +1,22 @@
+/* Home page container */
+.home-page {
+    @apply bg-[#F5F7F7] m-0 p-0 overflow-hidden w-full min-h-screen;
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fadeIn {
+    opacity: 0;
+}
+
+.fadeIn[style*="animation"] {
+    opacity: 1;
+}
