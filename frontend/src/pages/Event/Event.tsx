@@ -1,13 +1,14 @@
-'use client'
+"use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Navbar from "@/components/Navbar/Navbar";
-import { Link2, Twitter, Linkedin} from 'lucide-react'
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
+import { Link2, Twitter, Linkedin } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import axios from "axios";
 import DOMPurify from "dompurify";
+import { API_BASE_URL } from "@/config/api";
 
 type Event = {
   id: number;
@@ -22,16 +23,16 @@ export default function EventPage() {
   const { event_id } = useParams(); // Extract event_id from the URL
   const [eventData, setEventData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<any>(null);
+  const [error] = useState<any>(null);
   const [events, setEvents] = useState<Event[]>([]);
-  
+
   useEffect(() => {
     // Fetch event data dynamically
     const fetchEventData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/events/${event_id}`);
+        const response = await axios.get(`${API_BASE_URL}/events/${event_id}`);
         setEventData(response.data);
-      } catch (err:any) {
+      } catch (err: any) {
         console.log(`Failed to load event data:${err}`);
       } finally {
         setLoading(false);
@@ -44,14 +45,14 @@ export default function EventPage() {
   const fetchEvents = async () => {
     try {
       setLoading(true); // Start loading
-      const response = await axios.get<any>("http://localhost:8000/events", {
+      const response = await axios.get<any>(`${API_BASE_URL}/events`, {
         params: {
           limit: 4, // Set your default limit or pass dynamic params
           sort_by: "date",
         },
       });
       console.log(response);
-      const fetchedEvents = response.data.map((event:any) => ({
+      const fetchedEvents = response.data.map((event: any) => ({
         id: event.id,
         type: event.type || "N/A",
         startDate: event.date,
@@ -76,8 +77,8 @@ export default function EventPage() {
   };
 
   useEffect(() => {
-      fetchEvents();
-    }, []);
+    fetchEvents();
+  }, []);
 
   if (loading) {
     return (
@@ -123,17 +124,23 @@ export default function EventPage() {
             </div>
 
             <div className="prose max-w-none">
-              <h2 className="text-xl mb-4"   dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(eventData.description) }}>
-              </h2>
-              <p className="text-gray-600 text-xl mb-4" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(eventData.rules) }}>
-              </p>
+              <h2
+                className="text-xl mb-4"
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(eventData.description),
+                }}></h2>
+              <p
+                className="text-gray-600 text-xl mb-4"
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(eventData.rules),
+                }}></p>
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Kindly Follow the Above Rules</h3>
-              <p className="text-gray-600">
-                Follow the Code of Conduct
-              </p>
+              <h3 className="text-lg font-semibold">
+                Kindly Follow the Above Rules
+              </h3>
+              <p className="text-gray-600">Follow the Code of Conduct</p>
             </div>
 
             <div className="space-y-4">
@@ -190,59 +197,65 @@ export default function EventPage() {
           </Card>
         </div>
 
-      <div className="mt-12">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">More Events</h2>
-          <Button variant="link" className="text-[#4169E1] hover:text-[#3154b3] font-semibold">
-            See all open Events →
-          </Button>
+        <div className="mt-12">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">More Events</h2>
+            <Button
+              variant="link"
+              className="text-[#4169E1] hover:text-[#3154b3] font-semibold">
+              See all open Events →
+            </Button>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2">
+            {events.map((event) => (
+              <Card key={event.id} className="bg-white p-6">
+                <div className="flex justify-between items-start mb-6">
+                  <div className="space-y-2">
+                    <h2 className="text-2xl font-bold text-gray-900">
+                      {event.title}
+                    </h2>
+                    <p className="text-gray-500">
+                      {(event as any).club?.name || "N/A"}
+                    </p>
+                    <div className="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium bg-gray-100 text-gray-800">
+                      {event.type}
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <button className="text-gray-400 hover:text-gray-600">
+                      <Link2 className="h-5 w-5" />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Description
+                  </h3>
+                  <div className="flex flex-wrap gap-4 items-center">
+                    <div className="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium bg-gray-100 text-gray-800">
+                      {event.daysLeft} DAYS LEFT
+                    </div>
+                    <div className="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium bg-gray-100 text-gray-800">
+                      STARTS {event.startDate}
+                    </div>
+                    <div className="flex-grow flex justify-end">
+                      <Button className="bg-[#4169E1] hover:bg-[#3154b3] text-white rounded-full px-6 py-2 text-sm font-semibold">
+                        Apply now
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
-          {events.map((event) => (
-            <Card key={event.id} className="bg-white p-6">
-              <div className="flex justify-between items-start mb-6">
-                <div className="space-y-2">
-                  <h2 className="text-2xl font-bold text-gray-900">{event.title}</h2>
-                  <p className="text-gray-500">{event.club?.name || "N/A"}</p>
-                  <div className="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium bg-gray-100 text-gray-800">
-                    {event.type}
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <button className="text-gray-400 hover:text-gray-600">
-                    <Link2 className="h-5 w-5" />
-                  </button>
-                </div>
-              </div>
-
-              <div className="space-y-6">
-                <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Description
-                </h3>
-                <div className="flex flex-wrap gap-4 items-center">
-                  <div className="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium bg-gray-100 text-gray-800">
-                    {event.daysLeft} DAYS LEFT
-                  </div>
-                  <div className="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium bg-gray-100 text-gray-800">
-                    STARTS {event.startDate}
-                  </div>
-                  <div className="flex-grow flex justify-end">
-                    <Button className="bg-[#4169E1] hover:bg-[#3154b3] text-white rounded-full px-6 py-2 text-sm font-semibold">
-                      Apply now
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </Card>          
-          ))}
-        </div>
+        <footer className="mt-12 text-center text-gray-500 text-sm">
+          © 2025 Club Hub
+        </footer>
       </div>
-
-      <footer className="mt-12 text-center text-gray-500 text-sm">
-        © 2025 Club Hub
-      </footer>
     </div>
-    </div>  
-  )
-}  
+  );
+}

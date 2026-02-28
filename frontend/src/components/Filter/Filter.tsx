@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { IoFilterSharp } from "react-icons/io5";
 import axios from "axios";
+import { API_BASE_URL } from "@/config/api";
 
 interface FilterProps {
   onFilterChange: (filters: any) => void;
@@ -15,8 +16,10 @@ const FilterComponent: React.FC<FilterProps> = ({ onFilterChange }) => {
     end_date: "",
     sort_by: "",
   });
-  
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target;
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
@@ -28,7 +31,7 @@ const FilterComponent: React.FC<FilterProps> = ({ onFilterChange }) => {
   useEffect(() => {
     const fetchClubs = async () => {
       try {
-        const response = await axios.get<any>("http://localhost:8000/clubs");
+        const response = await axios.get<any>(`${API_BASE_URL}/clubs`);
         setClubs([
           { value: "", label: "All Clubs" }, // Default option
           ...response.data.map((club: any) => ({
@@ -51,8 +54,7 @@ const FilterComponent: React.FC<FilterProps> = ({ onFilterChange }) => {
         name="club_id"
         value={filters.club_id}
         onChange={handleChange}
-        className="border p-2 rounded-lg w-full md:w-1/4 mt-2 md:mt-0"
-      >
+        className="border p-2 rounded-lg w-full md:w-1/4 mt-2 md:mt-0">
         {clubs.map((club) => (
           <option key={club.value} value={club.value}>
             {club.label}
@@ -92,8 +94,7 @@ const FilterComponent: React.FC<FilterProps> = ({ onFilterChange }) => {
         name="sort_by"
         value={filters.sort_by}
         onChange={handleChange}
-        className="border p-2 rounded-lg w-full md:w-1/4 mt-2 md:mt-0"
-      >
+        className="border p-2 rounded-lg w-full md:w-1/4 mt-2 md:mt-0">
         <option value="date">Date (Ascending)</option>
         <option value="-date">Date (Descending)</option>
         <option value="name">Name (A-Z)</option>
@@ -103,8 +104,7 @@ const FilterComponent: React.FC<FilterProps> = ({ onFilterChange }) => {
       {/* Apply Button */}
       <button
         onClick={applyFilters}
-        className="bg-blue-600 text-xl text-white p-2 rounded-lg flex items-center mt-2 md:mt-0"
-      >
+        className="bg-blue-600 text-xl text-white p-2 rounded-lg flex items-center mt-2 md:mt-0">
         <IoFilterSharp className="mr-2" /> Apply
       </button>
     </div>

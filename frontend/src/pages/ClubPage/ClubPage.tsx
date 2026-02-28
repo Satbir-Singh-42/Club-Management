@@ -3,6 +3,7 @@ import SearchBar from "../../components/SearchBar/SearchBar.tsx"; // SearchBar c
 import ClubCard from "../../components/ClubCard/ClubCard.tsx"; // ClubCard component
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { API_BASE_URL } from "@/config/api";
 
 interface ClubData {
   id: number;
@@ -15,14 +16,13 @@ interface ClubData {
   websiteLink: string;
 }
 
-
 function ClubPage() {
   const [clubs, setClubs] = useState<ClubData[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
   useEffect(() => {
     const fetchClubs = async () => {
       try {
-        const response = await axios.get<any>("http://localhost:8000/clubs", {
+        const response = await axios.get<any>(`${API_BASE_URL}/clubs`, {
           params: {
             name: searchQuery || undefined,
           },
@@ -50,9 +50,12 @@ function ClubPage() {
     <div className="clubPage">
       {/* Navbar */}
       <Navbar />
-      
+
       {/* SearchBar */}
-      <SearchBar value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}/>
+      <SearchBar
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
 
       {/* Wrapper for the ClubCards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 p-6">

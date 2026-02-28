@@ -1,14 +1,5 @@
 from typing import Annotated, Optional
-from fastapi import (
-    APIRouter,
-    Depends,
-    File,
-    Form,
-    HTTPException,
-    status,
-    Query,
-    Security,
-)
+from fastapi import APIRouter, Depends, File, HTTPException, status
 from backend.database import DBSession
 from backend.models.event import EventModel, EventCreate, EventPopulated, EventUpdate
 from backend.models.club import ClubModel
@@ -19,7 +10,7 @@ from pydantic import BaseModel
 from datetime import datetime
 import os
 from uuid import uuid4
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordBearer
 
 
 class EventQueryParams(BaseModel):
@@ -90,7 +81,9 @@ async def create_event(
         venue=data.venue,
         team_size=data.team_size,
         registration_url=data.registration_url,
-        club_id=current_user.id if isinstance(current_user, ClubModel) else data.club_id,
+        club_id=(
+            current_user.id if isinstance(current_user, ClubModel) else data.club_id
+        ),
         poster=poster_path,
         is_featured=data.is_featured,
         event_type=data.event_type,
@@ -104,6 +97,27 @@ async def create_event(
     session.refresh(event_model)
 
     return event_model
+
+
+@app.get("/drafts/events", response_model=list[EventPopulated])
+async def get_draft_events(
+    session: DBSession,
+    current_user: Annotated[ClubModel | AdminModel, Depends(get_user_auth)],
+    club_id: int | None = None,
+):
+    """Get draft events for the authenticated club or admin."""
+    query = (
+        select(EventModel)
+        .where(EventModel.draft == True)
+        .where(EventModel.deleted_at.is_(None))
+    )
+
+    if isinstance(current_user, ClubModel):
+        query = query.where(EventModel.club_id == current_user.id)
+    elif club_id:
+        query = query.where(EventModel.club_id == club_id)
+
+    return session.exec(query).all()
 
 
 @app.get("/{event_id}", response_model=EventPopulated)

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom"; // Import useNavigate for redirection
 import { FaMoon, FaSun } from "react-icons/fa";
+import { API_BASE_URL } from "@/config/api";
 
 const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -16,11 +17,11 @@ const ForgotPassword: React.FC = () => {
 
     setError("");
     const formData = new FormData();
-    formData.append("email", email); 
+    formData.append("email", email);
 
     try {
       // Send the email to the backend
-      const response = await fetch("http://localhost:8000/password-reset/request", {
+      const response = await fetch(`${API_BASE_URL}/password-reset/request`, {
         method: "POST",
         body: formData,
       });
@@ -31,7 +32,7 @@ const ForgotPassword: React.FC = () => {
 
       // If successful, redirect to the OTP page
       navigate("/otp"); // Redirect to the OTP page
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message);
     }
   };
@@ -44,13 +45,11 @@ const ForgotPassword: React.FC = () => {
     <div
       className={`min-h-screen flex items-center justify-center transition-all duration-500 ${
         darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-800"
-      }`}
-    >
+      }`}>
       <div
         className={`${
           darkMode ? "bg-gray-800" : "bg-white"
-        } rounded-lg shadow-lg p-6 w-full max-w-sm`}
-      >
+        } rounded-lg shadow-lg p-6 w-full max-w-sm`}>
         {/* Logo */}
         <div className="flex justify-center mb-4">
           <img
@@ -60,15 +59,16 @@ const ForgotPassword: React.FC = () => {
           />
         </div>
         {/* Title */}
-        <h1 className="text-center text-2xl font-semibold mb-4">Forgot Password</h1>
+        <h1 className="text-center text-2xl font-semibold mb-4">
+          Forgot Password
+        </h1>
         {/* Email Input */}
         <div className="mb-4">
           <label
             htmlFor="email"
             className={`block text-sm font-medium ${
               darkMode ? "text-white" : "text-gray-700"
-            }`}
-          >
+            }`}>
             Email
           </label>
           <input
@@ -90,8 +90,7 @@ const ForgotPassword: React.FC = () => {
                 ? "bg-blue-500 hover:bg-blue-700 text-white"
                 : "bg-red-500 hover:bg-red-700 text-white"
             }`}
-            onClick={handleSubmit}
-          >
+            onClick={handleSubmit}>
             Send Reset Link
           </button>
           <div className="text-center text-sm">OR</div>
@@ -101,8 +100,7 @@ const ForgotPassword: React.FC = () => {
               darkMode
                 ? "bg-blue-500 hover:bg-blue-700 text-white"
                 : "bg-red-500 hover:bg-red-700 text-white"
-            }`}
-          >
+            }`}>
             Back to Login
           </Link>
         </div>
@@ -113,8 +111,7 @@ const ForgotPassword: React.FC = () => {
         <button
           onClick={toggleDarkMode}
           aria-label="Toggle Dark Mode"
-          className="text-gray-500 dark:text-white"
-        >
+          className="text-gray-500 dark:text-white">
           {darkMode ? <FaSun /> : <FaMoon />}
         </button>
       </div>

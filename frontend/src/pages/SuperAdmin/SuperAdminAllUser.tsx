@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -11,14 +11,12 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
   DialogFooter,
 } from "@/components/ui/dialog";
 import {
@@ -31,6 +29,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Search, Trash2, Users, Download } from "lucide-react";
 import axios from "axios";
+import { API_BASE_URL } from "@/config/api";
 
 interface User {
   id: number;
@@ -55,21 +54,19 @@ export default function UsersTable() {
   const [showBulkDeleteAlert, setShowBulkDeleteAlert] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
 
-  useEffect(()=>{
+  useEffect(() => {
     getUserData();
-  },[])
+  }, []);
 
-  const getUserData = async() => {
+  const getUserData = async () => {
     try {
-      const response = await axios.get<any>('http://localhost:8000/students/',
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          },
-        }
-      )
-      const fetchedClubs = response.data.map((user:any) => ({
+      const response = await axios.get<any>(`${API_BASE_URL}/students/`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      const fetchedClubs = response.data.map((user: any) => ({
         id: user.id,
         name: user.name,
         email: user.email,
@@ -78,20 +75,20 @@ export default function UsersTable() {
         branch: user.branch,
         batch: user.batch,
         contact: user.contact,
-        photo: user.photo? user.photo : null,
-      }))
+        photo: user.photo ? user.photo : null,
+      }));
 
       setUsers(fetchedClubs);
-    } catch (error:any) {
-      console.log("Error Fetching Clubs: ", error.message)
+    } catch (error: any) {
+      console.log("Error Fetching Clubs: ", error.message);
     }
-  }
+  };
 
   const handleSelectUser = (userId: number) => {
     setSelectedUsers((prev) =>
       prev.includes(userId)
         ? prev.filter((id) => id !== userId)
-        : [...prev, userId]
+        : [...prev, userId],
     );
   };
 
@@ -118,19 +115,17 @@ export default function UsersTable() {
     setShowDeleteAlert(true);
   };
 
-  const confirmDelete = async() => {
+  const confirmDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8000/students/${userToDelete}`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          },
-        }
-      )
+      await axios.delete(`${API_BASE_URL}/students/${userToDelete}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       getUserData();
       console.log("User deleted successfully");
-    } catch (error:any) {
+    } catch (error: any) {
       console.log("Error Deleting User:", error.message);
     }
     setUserToDelete(null);
@@ -149,14 +144,14 @@ export default function UsersTable() {
 
   const filteredUsers = users.filter((user) =>
     Object.values(user).some((value) =>
-      value.toString().toLowerCase().includes(searchQuery.toLowerCase())
-    )
+      value.toString().toLowerCase().includes(searchQuery.toLowerCase()),
+    ),
   );
 
   const totalPages = Math.ceil(filteredUsers.length / parseInt(rowsPerPage));
   const paginatedUsers = filteredUsers.slice(
     (currentPage - 1) * parseInt(rowsPerPage),
-    currentPage * parseInt(rowsPerPage)
+    currentPage * parseInt(rowsPerPage),
   );
 
   return (
@@ -195,8 +190,7 @@ export default function UsersTable() {
                 variant="destructive"
                 size="sm"
                 onClick={handleDeleteSelected}
-                className="gap-2"
-              >
+                className="gap-2">
                 <Trash2 className="h-4 w-4" />
                 Remove Selected
               </Button>
@@ -272,8 +266,7 @@ export default function UsersTable() {
                   <TableCell>
                     <Avatar
                       className="cursor-pointer ring-offset-background transition-all hover:scale-105 hover:ring-2 hover:ring-primary hover:ring-offset-2"
-                      onClick={() => setProfileModalUser(user.name)}
-                    >
+                      onClick={() => setProfileModalUser(user.name)}>
                       <AvatarImage src="/placeholder.svg" alt={user.name} />
                       <AvatarFallback>{user.name[0]}</AvatarFallback>
                     </Avatar>
@@ -293,8 +286,7 @@ export default function UsersTable() {
                         variant="ghost"
                         size="icon"
                         className="bg-transparent hover:bg-transparent"
-                        onClick={() => handleDeleteUser(user)}
-                      >
+                        onClick={() => handleDeleteUser(user)}>
                         <Trash2 className="h-4 w-4 text-destructive" />
                       </Button>
                     </div>
@@ -306,74 +298,73 @@ export default function UsersTable() {
         </div>
 
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-  <div className="flex items-center gap-2">
-    <span className="text-sm text-muted-foreground">
-      Rows per page:
-    </span>
-    <Select
-      value={rowsPerPage}
-      onValueChange={(value) => {
-        setRowsPerPage(value);
-        setCurrentPage(1);
-      }}
-    >
-      <SelectTrigger className="w-[70px]">
-        <SelectValue>{rowsPerPage}</SelectValue>
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="5">5</SelectItem>
-        <SelectItem value="11">11</SelectItem>
-        <SelectItem value="20">20</SelectItem>
-        <SelectItem value="50">50</SelectItem>
-      </SelectContent>
-    </Select>
-    <span className="text-sm text-muted-foreground">
-      Showing {(currentPage - 1) * parseInt(rowsPerPage) + 1}-
-      {Math.min(
-        currentPage * parseInt(rowsPerPage),
-        filteredUsers.length
-      )}{" "}
-      of {filteredUsers.length} entries
-    </span>
-  </div>
-  <div className="flex gap-2">
-    <Button
-      variant="outline"
-      size="sm"
-      onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
-      disabled={currentPage === 1}
-    >
-      Previous
-    </Button>
-    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-      <Button
-        key={page}
-        variant={currentPage === page ? "default" : "outline"}
-        size="sm"
-        onClick={() => setCurrentPage(page)}
-        className={currentPage === page ? "bg-blue-500 text-white border-0" : "border-0"}
-      >
-        {page}
-      </Button>
-    ))}
-    <Button
-      variant="outline"
-      size="sm"
-      onClick={() =>
-        setCurrentPage((prev) => Math.min(totalPages, prev + 1))
-      }
-      disabled={currentPage === totalPages}
-    >
-      Next
-    </Button>
-  </div>
-</div>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">
+              Rows per page:
+            </span>
+            <Select
+              value={rowsPerPage}
+              onValueChange={(value) => {
+                setRowsPerPage(value);
+                setCurrentPage(1);
+              }}>
+              <SelectTrigger className="w-[70px]">
+                <SelectValue>{rowsPerPage}</SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="5">5</SelectItem>
+                <SelectItem value="11">11</SelectItem>
+                <SelectItem value="20">20</SelectItem>
+                <SelectItem value="50">50</SelectItem>
+              </SelectContent>
+            </Select>
+            <span className="text-sm text-muted-foreground">
+              Showing {(currentPage - 1) * parseInt(rowsPerPage) + 1}-
+              {Math.min(
+                currentPage * parseInt(rowsPerPage),
+                filteredUsers.length,
+              )}{" "}
+              of {filteredUsers.length} entries
+            </span>
+          </div>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+              disabled={currentPage === 1}>
+              Previous
+            </Button>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <Button
+                key={page}
+                variant={currentPage === page ? "default" : "outline"}
+                size="sm"
+                onClick={() => setCurrentPage(page)}
+                className={
+                  currentPage === page
+                    ? "bg-blue-500 text-white border-0"
+                    : "border-0"
+                }>
+                {page}
+              </Button>
+            ))}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(totalPages, prev + 1))
+              }
+              disabled={currentPage === totalPages}>
+              Next
+            </Button>
+          </div>
+        </div>
       </div>
 
       <Dialog
         open={!!profileModalUser}
-        onOpenChange={() => setProfileModalUser(null)}
-      >
+        onOpenChange={() => setProfileModalUser(null)}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold">
@@ -394,8 +385,7 @@ export default function UsersTable() {
               onClick={() =>
                 profileModalUser && handleDownloadProfileImage(profileModalUser)
               }
-              className="w-full"
-            >
+              className="w-full">
               <Download className="mr-2 h-4 w-4" />
               Download Profile Image
             </Button>
@@ -408,8 +398,8 @@ export default function UsersTable() {
           <DialogHeader>
             <DialogTitle>Delete User</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete {userToDelete?.name}? This action
-              cannot be undone.
+              Are you sure you want to delete this user? This action cannot be
+              undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -435,8 +425,7 @@ export default function UsersTable() {
           <DialogFooter>
             <Button
               variant="outline"
-              onClick={() => setShowBulkDeleteAlert(false)}
-            >
+              onClick={() => setShowBulkDeleteAlert(false)}>
               Cancel
             </Button>
             <Button variant="destructive" onClick={confirmBulkDelete}>

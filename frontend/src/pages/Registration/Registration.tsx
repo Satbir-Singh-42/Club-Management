@@ -1,5 +1,3 @@
-import Login from '@/components/Login/Login.tsx'
-import SignUp from '@/components/SignUp/SignUp.tsx'
 import Navbar from "@/components/Navbar/Navbar";
 import "./Registration.css";
 
@@ -69,8 +67,7 @@ export function AddStudentForm({ onSubmit, onCancel }: AddStudentFormProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-4 bg-white p-6 rounded-lg shadow-md"
-    >
+      className="space-y-4 bg-white p-6 rounded-lg shadow-md">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="name">Name</Label>
@@ -86,8 +83,7 @@ export function AddStudentForm({ onSubmit, onCancel }: AddStudentFormProps) {
           <Label htmlFor="branch">Branch</Label>
           <Select
             onValueChange={handleSelectChange("branch")}
-            value={formData.branch}
-          >
+            value={formData.branch}>
             <SelectTrigger>
               <SelectValue placeholder="Select branch" />
             </SelectTrigger>
@@ -179,8 +175,7 @@ export function AddStudentForm({ onSubmit, onCancel }: AddStudentFormProps) {
           <Label htmlFor="gender">Gender</Label>
           <Select
             onValueChange={handleSelectChange("gender")}
-            value={formData.gender}
-          >
+            value={formData.gender}>
             <SelectTrigger>
               <SelectValue placeholder="Select gender" />
             </SelectTrigger>
@@ -388,8 +383,7 @@ export default function StudentDataTable() {
           </DropdownMenu>
           <Button
             onClick={() => setShowAddForm(true)}
-            className="flex items-center space-x-2"
-          >
+            className="flex items-center space-x-2">
             <Plus size={20} />
             <span>Add Student</span>
           </Button>
@@ -438,8 +432,7 @@ export default function StudentDataTable() {
               : currentStudents.map((student) => (
                   <TableRow
                     key={student.id}
-                    className="transition-colors hover:bg-gray-50"
-                  >
+                    className="transition-colors hover:bg-gray-50">
                     <TableCell>
                       <img
                         src={student.profileImage}
@@ -473,8 +466,7 @@ export default function StudentDataTable() {
         <div className="space-x-2">
           <Button
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-          >
+            disabled={currentPage === 1}>
             Previous
           </Button>
           <Button
@@ -486,8 +478,7 @@ export default function StudentDataTable() {
                 ),
               )
             }
-            disabled={indexOfLastStudent >= filteredStudents.length}
-          >
+            disabled={indexOfLastStudent >= filteredStudents.length}>
             Next
           </Button>
         </div>

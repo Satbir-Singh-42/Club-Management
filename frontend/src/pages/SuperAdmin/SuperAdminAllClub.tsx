@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -29,6 +29,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Search, Trash2 } from "lucide-react";
 import axios from "axios";
+import { API_BASE_URL } from "@/config/api";
 
 interface Club {
   id: number;
@@ -41,119 +42,6 @@ interface Club {
   logo: string;
 }
 
-const mockClubs: Club[] = [
-  {
-    id: 1,
-    clubName: "Flash Giants",
-    email: "mathew@iisc.ac.in",
-    facultyAdvisor: "Dr Savithri Reddy",
-    facultyContact: "0929 555 0309",
-    convenor: "Ajay Yadav",
-    convenorContact: "0929 555 0309",
-    logo: "/placeholder.svg",
-  },
-  {
-    id: 2,
-    clubName: "Swift Panthers",
-    email: "acharya.suman@iisc.ac.in",
-    facultyAdvisor: "Dr Alka Shekhar",
-    facultyContact: "0932 555 9943",
-    convenor: "Abhishek Gowda",
-    convenorContact: "0932 555 9943",
-    logo: "/placeholder.svg",
-  },
-  {
-    id: 3,
-    clubName: "Velocity FC",
-    email: "gowda.abhishek@iisc.ac.in",
-    facultyAdvisor: "Mr Shiva Singh",
-    facultyContact: "0928 555 8524",
-    convenor: "Akash Bhatia",
-    convenorContact: "0928 555 8524",
-    logo: "/placeholder.svg",
-  },
-  {
-    id: 4,
-    clubName: "Blaze United",
-    email: "prakash.sanath@iisc.ac.in",
-    facultyAdvisor: "Dr Rekha Kumari",
-    facultyContact: "0932 555 5656",
-    convenor: "Sanath Prakash",
-    convenorContact: "0932 555 5656",
-    logo: "/placeholder.svg",
-  },
-  {
-    id: 5,
-    clubName: "Phoenix Tigers",
-    email: "tiwari.sunita@iisc.ac.in",
-    facultyAdvisor: "Dr Reshma Gowda",
-    facultyContact: "0283 555 4001",
-    convenor: "Suman Acharya",
-    convenorContact: "0283 555 4001",
-    logo: "/placeholder.svg",
-  },
-  {
-    id: 6,
-    clubName: "Apex Lions",
-    email: "rai.newton@iisc.ac.in",
-    facultyAdvisor: "Mr Rajesh Sharma",
-    facultyContact: "0919 555 3815",
-    convenor: "Akash Sharma",
-    convenorContact: "0919 555 3815",
-    logo: "/placeholder.svg",
-  },
-  {
-    id: 7,
-    clubName: "Dynamo Squad",
-    email: "sharma.akash@iisc.ac.in",
-    facultyAdvisor: "Dr Vasudeva Reddy",
-    facultyContact: "0919 555 0895",
-    convenor: "Paras Pandhare",
-    convenorContact: "0919 555 0895",
-    logo: "/placeholder.svg",
-  },
-  {
-    id: 8,
-    clubName: "Thunder FC",
-    email: "bhatia.akash@iisc.ac.in",
-    facultyAdvisor: "Dr Pranjan Rai",
-    facultyContact: "0932 555 4736",
-    convenor: "Sunita Tiwari",
-    convenorContact: "0932 555 4736",
-    logo: "/placeholder.svg",
-  },
-  {
-    id: 9,
-    clubName: "Sonic Strikers",
-    email: "yadav.ajay@iisc.ac.in",
-    facultyAdvisor: "Dr Vasudeva Reddy",
-    facultyContact: "0929 555 2726",
-    convenor: "Justin John Mathew",
-    convenorContact: "0929 555 2726",
-    logo: "/placeholder.svg",
-  },
-  {
-    id: 10,
-    clubName: "Dynamo Falcons",
-    email: "pandhare.paras@iisc.ac.in",
-    facultyAdvisor: "Dr Rekha Kumari",
-    facultyContact: "0283 555 0029",
-    convenor: "Newton Rai",
-    convenorContact: "0283 555 0029",
-    logo: "/placeholder.svg",
-  },
-  {
-    id: 11,
-    clubName: "Sonic Falcons",
-    email: "bharti.paras@iisc.ac.in",
-    facultyAdvisor: "Dr Rajesh Kumari",
-    facultyContact: "0283 555 0059",
-    convenor: "Newton Tiwari",
-    convenorContact: "0283 555 0023",
-    logo: "/placeholder.svg",
-  },
-];
-
 export default function ClubTable() {
   const [searchQuery, setSearchQuery] = useState("");
   const [clubToDelete, setClubToDelete] = useState<number | null>(null);
@@ -162,21 +50,19 @@ export default function ClubTable() {
   const [rowsPerPage, setRowsPerPage] = useState("11");
   const [clubs, setClubs] = useState<Club[]>([]);
 
-  useEffect(()=>{
+  useEffect(() => {
     getClubData();
-  },[])
+  }, []);
 
-  const getClubData = async() => {
+  const getClubData = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/clubs/',
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          },
-        }
-      )
-      const fetchedClubs = response.data.map((club:any) => ({
+      const response = await axios.get(`${API_BASE_URL}/clubs/`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      const fetchedClubs = response.data.map((club: any) => ({
         id: club.id,
         clubName: club.name,
         email: club.email,
@@ -185,32 +71,30 @@ export default function ClubTable() {
         convenor: club.convenor || "Not Available",
         convenorContact: club.convenor_contact || "Not Available",
         logo: club.logo,
-      }))
+      }));
 
       setClubs(fetchedClubs);
-    } catch (error:any) {
-      console.log("Error Fetching Clubs: ", error.message)
+    } catch (error: any) {
+      console.log("Error Fetching Clubs: ", error.message);
     }
-  }
+  };
 
   const handleDeleteClub = (club: Club) => {
     setClubToDelete(club.id);
     setShowDeleteAlert(true);
   };
 
-  const confirmDelete = async() => {
+  const confirmDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8000/clubs/${clubToDelete}`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          },
-        }
-      )
+      await axios.delete(`${API_BASE_URL}/clubs/${clubToDelete}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       getClubData();
       console.log("Club deleted successfully");
-    } catch (error:any) {
+    } catch (error: any) {
       console.log("Error Deleting Club:", error.message);
     }
     setClubToDelete(null);
@@ -219,14 +103,14 @@ export default function ClubTable() {
 
   const filteredClubs = clubs.filter((club) =>
     Object.values(club).some((value) =>
-      value.toString().toLowerCase().includes(searchQuery.toLowerCase())
-    )
+      value.toString().toLowerCase().includes(searchQuery.toLowerCase()),
+    ),
   );
 
   const totalPages = Math.ceil(filteredClubs.length / parseInt(rowsPerPage));
   const paginatedClubs = filteredClubs.slice(
     (currentPage - 1) * parseInt(rowsPerPage),
-    currentPage * parseInt(rowsPerPage)
+    currentPage * parseInt(rowsPerPage),
   );
 
   return (
@@ -292,8 +176,7 @@ export default function ClubTable() {
                         variant="ghost"
                         size="icon"
                         className="bg-transparent"
-                        onClick={() => handleDeleteClub(club)}
-                      >
+                        onClick={() => handleDeleteClub(club)}>
                         <Trash2 className="h-4 w-4 text-destructive" />
                       </Button>
                     </div>
@@ -314,8 +197,7 @@ export default function ClubTable() {
               onValueChange={(value) => {
                 setRowsPerPage(value);
                 setCurrentPage(1);
-              }}
-            >
+              }}>
               <SelectTrigger className="w-[70px]">
                 <SelectValue>{rowsPerPage}</SelectValue>
               </SelectTrigger>
@@ -330,7 +212,7 @@ export default function ClubTable() {
               Showing {(currentPage - 1) * parseInt(rowsPerPage) + 1}-
               {Math.min(
                 currentPage * parseInt(rowsPerPage),
-                filteredClubs.length
+                filteredClubs.length,
               )}{" "}
               of {filteredClubs.length} entries
             </span>
@@ -340,8 +222,7 @@ export default function ClubTable() {
               variant="outline"
               size="sm"
               onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
-              disabled={currentPage === 1}
-            >
+              disabled={currentPage === 1}>
               Previous
             </Button>
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
@@ -350,8 +231,7 @@ export default function ClubTable() {
                 variant="outline"
                 size="sm"
                 onClick={() => setCurrentPage(page)}
-                className="bg-blue-500 text-white focus:ring-0 active:ring-0 border-0"
-              >
+                className="bg-blue-500 text-white focus:ring-0 active:ring-0 border-0">
                 {page}
               </Button>
             ))}
@@ -361,8 +241,7 @@ export default function ClubTable() {
               onClick={() =>
                 setCurrentPage((prev) => Math.min(totalPages, prev + 1))
               }
-              disabled={currentPage === totalPages}
-            >
+              disabled={currentPage === totalPages}>
               Next
             </Button>
           </div>
@@ -374,8 +253,8 @@ export default function ClubTable() {
           <DialogHeader>
             <DialogTitle>Delete Club</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete this Club? This
-              action cannot be undone.
+              Are you sure you want to delete this Club? This action cannot be
+              undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

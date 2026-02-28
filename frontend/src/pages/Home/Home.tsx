@@ -7,6 +7,7 @@ import EventCard from "@/components/EventCard/EventCard";
 import "./Home.css";
 import axios from "axios";
 import FilterDialog from "@/components/FilterDialog/FilterDialog";
+import { API_BASE_URL } from "@/config/api";
 import { IoFilterSharp } from "react-icons/io5";
 
 type Event = {
@@ -43,7 +44,7 @@ const Home: React.FC = () => {
 
   const fetchCarouselEvents = async () => {
     try {
-      const response = await axios.get<any>("http://localhost:8000/events", {
+      const response = await axios.get<any>(`${API_BASE_URL}/events`, {
         params: {
           skip: 0,
           limit: 3,
@@ -59,7 +60,7 @@ const Home: React.FC = () => {
   const fetchEvents = async (pageNum: number) => {
     try {
       setLoading(true);
-      const response = await axios.get<any>("http://localhost:8000/events", {
+      const response = await axios.get<any>(`${API_BASE_URL}/events`, {
         params: {
           skip: (pageNum - 1) * EVENTS_PER_PAGE,
           limit: EVENTS_PER_PAGE,
@@ -86,7 +87,9 @@ const Home: React.FC = () => {
 
       console.log(fetchedEvents);
 
-      setEvents(prev => pageNum === 1 ? fetchedEvents : [...prev, ...fetchedEvents]);
+      setEvents((prev) =>
+        pageNum === 1 ? fetchedEvents : [...prev, ...fetchedEvents],
+      );
       setHasMore(fetchedEvents.length === EVENTS_PER_PAGE);
       setLoading(false);
     } catch (error) {
@@ -111,7 +114,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     fetchCarouselEvents();
   }, []);
-  
+
   useEffect(() => {
     fetchEvents(page);
   }, [page, filters, searchQuery]);
@@ -119,9 +122,9 @@ const Home: React.FC = () => {
   useEffect(() => {
     if (loading) return;
 
-    observer.current = new IntersectionObserver(entries => {
+    observer.current = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && hasMore) {
-        setPage(prev => prev + 1);
+        setPage((prev) => prev + 1);
       }
     });
 
@@ -144,14 +147,19 @@ const Home: React.FC = () => {
         onFilterChange={handleFilterChange}
       />
       <Navbar />
-      <SearchBar value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
-      
-      {carouselEvents.length && <div>
-        <SlidingCard data={carouselEvents}/>
-      </div>}
+      <SearchBar
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
+
+      {carouselEvents.length && (
+        <div>
+          <SlidingCard data={carouselEvents} />
+        </div>
+      )}
 
       <div className="bg-[#ebebeb] w-full pr-20 py-2 my-8 text-lg text-right flex items-center justify-end">
-        <button className="flex" onClick={()=>setIsFilterOpen(true)}>
+        <button className="flex" onClick={() => setIsFilterOpen(true)}>
           <IoFilterSharp size={20} className="mr-2" />
           Filters
         </button>
@@ -165,27 +173,26 @@ const Home: React.FC = () => {
           <div
             key={index}
             ref={index === events.length - 1 ? lastEventElementRef : null}
-            className=""
-          >
+            className="">
             <EventCard {...event} />
           </div>
         ))}
-        
+
         {loading && (
           <div className="text-center col-span-full text-lg font-semibold">
-            <img src="LoadingHand2.webp" className="loading-img"/>
+            <img src="LoadingHand2.webp" className="loading-img" />
           </div>
         )}
-        
+
         {!hasMore && !loading && events.length > 0 && (
           <div className="text-center text-lg font-semibold mt-4 rounded-full col-span-full">
-            <img src="./AllCaughtUp.png"/>
+            <img src="./AllCaughtUp.png" />
           </div>
         )}
-        
+
         {!loading && events.length === 0 && (
           <div className="text-center text-lg col-span-full font-semibold">
-            <img src="./NoEvents.jpg"/>
+            <img src="./NoEvents.jpg" />
           </div>
         )}
       </div>

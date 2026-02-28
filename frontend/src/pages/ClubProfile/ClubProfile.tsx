@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import Navbar from "@/components/Navbar/Navbar"; // Navbar component
 import { Upload, X } from "lucide-react";
 import axios from "axios";
+import { API_BASE_URL } from "@/config/api";
 
 export default function ClubForm() {
   const [logoFile, setLogoFile] = useState<File | null>(null);
@@ -25,19 +26,17 @@ export default function ClubForm() {
   const instagramUrlRef = useRef<any>(null);
   const passwordRef = useRef<any>(null);
 
-  useEffect(()=>{
+  useEffect(() => {
     fillInitialData();
-  },[])
+  }, []);
 
-  const fillInitialData = async() => {
+  const fillInitialData = async () => {
     try {
-      const response:any = await axios.get("http://localhost:8000/auth/me",
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const response: any = await axios.get(`${API_BASE_URL}/auth/me`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       setClubId(response.data.id);
       emailRef.current.value = response.data.email;
       nameRef.current.value = response.data.name;
@@ -45,12 +44,12 @@ export default function ClubForm() {
       taglineRef.current.value = response.data.tagline;
       descriptionRef.current.value = response.data.description;
       instagramUrlRef.current.value = response.data.instagram_url;
-      
+
       // set user details in state
     } catch (err: any) {
       console.log(`Failed to load user details:${err}`);
-    } 
-  }
+    }
+  };
 
   const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -92,12 +91,17 @@ export default function ClubForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
-    if (!emailRef.current || !nameRef.current || !acronymRef.current || !passwordRef.current) {
+
+    if (
+      !emailRef.current ||
+      !nameRef.current ||
+      !acronymRef.current ||
+      !passwordRef.current
+    ) {
       alert("Please fill out all required fields.");
       return;
     }
-  
+
     const formData = new FormData();
     formData.append("email", emailRef.current.value);
     formData.append("name", nameRef.current.value);
@@ -106,34 +110,33 @@ export default function ClubForm() {
     formData.append("description", descriptionRef.current?.value || "");
     formData.append("instagram_url", instagramUrlRef.current?.value || "");
     formData.append("password", passwordRef.current.value);
-  
+
     if (logoFile) {
       formData.append("logo", logoFile); // Append the logo file
     }
     if (bannerFile) {
       formData.append("banner", bannerFile); // Append the banner file
     }
-  
+
     try {
-      const response = await fetch(`http://localhost:8000/clubs/${clubId}`, {
+      const response = await fetch(`${API_BASE_URL}/clubs/${clubId}`, {
         method: "PATCH",
         body: formData,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-  
+
       if (!response.ok) {
         throw new Error("Failed to submit the form.");
       }
-  
+
       alert("Form submitted successfully!");
     } catch (error) {
       console.error("Error:", error);
       alert("Error occurred while submitting the form.");
     }
   };
-  
 
   const handleCancel = () => {
     // Reset the form or navigate away
@@ -149,7 +152,9 @@ export default function ClubForm() {
 
         <Card>
           <CardContent className="p-6">
-            <form className="grid grid-cols-1 md:grid-cols-2 gap-6" onSubmit={handleSubmit}>
+            <form
+              className="grid grid-cols-1 md:grid-cols-2 gap-6"
+              onSubmit={handleSubmit}>
               {/* Left Column */}
               <div className="space-y-4">
                 <div className="space-y-2">
@@ -256,16 +261,14 @@ export default function ClubForm() {
                         <button
                           type="button"
                           onClick={removeLogoPreview}
-                          className="absolute -top-2 -right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
-                        >
+                          className="absolute -top-2 -right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600">
                           <X className="h-4 w-4" />
                         </button>
                       </div>
                     ) : (
                       <label
                         htmlFor="logo"
-                        className="cursor-pointer flex flex-col items-center gap-2"
-                      >
+                        className="cursor-pointer flex flex-col items-center gap-2">
                         <Upload className="h-10 w-10 text-blue-500" />
                         <span className="text-sm text-center text-blue-600">
                           Drag and drop or click to choose
@@ -298,16 +301,14 @@ export default function ClubForm() {
                         <button
                           type="button"
                           onClick={removeBannerPreview}
-                          className="absolute -top-2 -right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
-                        >
+                          className="absolute -top-2 -right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600">
                           <X className="h-4 w-4" />
                         </button>
                       </div>
                     ) : (
                       <label
                         htmlFor="banner"
-                        className="cursor-pointer flex flex-col items-center gap-2"
-                      >
+                        className="cursor-pointer flex flex-col items-center gap-2">
                         <Upload className="h-10 w-10 text-blue-500" />
                         <span className="text-sm text-center text-blue-600">
                           Drag and drop or click to choose
@@ -319,23 +320,21 @@ export default function ClubForm() {
                     )}
                   </div>
                 </div>
-                    {/* Buttons */}
-              <div className="flex gap-8 md:col-span-2 mt-4">
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={handleCancel}
-                  className="flex-1 bg-blue-100 hover:bg-blue-200 text-blue-700 h-12 text-lg"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={handleSubmit}
-                  className="flex-1 bg-blue-500 hover:bg-blue-600 text-white h-12 text-lg"
-                >
-                  Save
-                </Button>
-              </div>
+                {/* Buttons */}
+                <div className="flex gap-8 md:col-span-2 mt-4">
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={handleCancel}
+                    className="flex-1 bg-blue-100 hover:bg-blue-200 text-blue-700 h-12 text-lg">
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handleSubmit}
+                    className="flex-1 bg-blue-500 hover:bg-blue-600 text-white h-12 text-lg">
+                    Save
+                  </Button>
+                </div>
               </div>
             </form>
           </CardContent>

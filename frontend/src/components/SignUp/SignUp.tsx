@@ -1,7 +1,8 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash, FaMoon, FaSun } from "react-icons/fa";
+import { API_BASE_URL } from "@/config/api";
 
 const SignUp: React.FC = () => {
   const [name, setName] = useState("");
@@ -27,14 +28,16 @@ const SignUp: React.FC = () => {
 
     // Client-side validation
     if (!name || !email || password.length < 7 || !crn || !urn) {
-      setError("Please fill in all fields correctly. Password must be at least 7 characters long.");
+      setError(
+        "Please fill in all fields correctly. Password must be at least 7 characters long.",
+      );
       return;
     }
 
     const data = { name, email, password, crn, urn };
 
     try {
-      const response = await fetch(`http://localhost:8000/register`, {
+      const response = await fetch(`${API_BASE_URL}/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -57,13 +60,22 @@ const SignUp: React.FC = () => {
   };
 
   return (
-    <div className={`min-h-screen flex flex-col items-center justify-center transition-all duration-500 ${darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-800"}`}>
+    <div
+      className={`min-h-screen flex flex-col items-center justify-center transition-all duration-500 ${darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-800"}`}>
       {/* Dark Mode Toggle */}
-      <button onClick={toggleDarkMode} className="absolute top-4 right-4 text-2xl" aria-label="Toggle Dark Mode">
-        {darkMode ? <FaSun className="text-gray-500" /> : <FaMoon className="text-gray-500" />}
+      <button
+        onClick={toggleDarkMode}
+        className="absolute top-4 right-4 text-2xl"
+        aria-label="Toggle Dark Mode">
+        {darkMode ? (
+          <FaSun className="text-gray-500" />
+        ) : (
+          <FaMoon className="text-gray-500" />
+        )}
       </button>
 
-      <div className={`w-full max-w-sm p-6 rounded-lg shadow-lg ${darkMode ? "bg-gray-800" : "bg-white"}`}>
+      <div
+        className={`w-full max-w-sm p-6 rounded-lg shadow-lg ${darkMode ? "bg-gray-800" : "bg-white"}`}>
         {/* Logo and Title Container */}
         <div className="flex flex-col items-center mb-6">
           <img
@@ -78,7 +90,9 @@ const SignUp: React.FC = () => {
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="name" className={`block text-sm font-medium ${darkMode ? "text-white" : "text-gray-700"}`}>
+            <label
+              htmlFor="name"
+              className={`block text-sm font-medium ${darkMode ? "text-white" : "text-gray-700"}`}>
               Name
             </label>
             <input
@@ -92,7 +106,9 @@ const SignUp: React.FC = () => {
           </div>
           {/* Email Input */}
           <div className="mb-4">
-            <label htmlFor="email" className={`block text-sm font-medium ${darkMode ? "text-white" : "text-gray-700"}`}>
+            <label
+              htmlFor="email"
+              className={`block text-sm font-medium ${darkMode ? "text-white" : "text-gray-700"}`}>
               Email
             </label>
             <input
@@ -106,7 +122,9 @@ const SignUp: React.FC = () => {
           </div>
           {/* Password Input */}
           <div className="mb-4">
-            <label htmlFor="password" className={`block text-sm font-medium ${darkMode ? "text-white" : "text-gray-700"}`}>
+            <label
+              htmlFor="password"
+              className={`block text-sm font-medium ${darkMode ? "text-white" : "text-gray-700"}`}>
               Password
             </label>
             <div className="relative">
@@ -122,15 +140,20 @@ const SignUp: React.FC = () => {
                 type="button"
                 onClick={togglePasswordVisibility}
                 className="absolute inset-y-0 right-0 flex items-center px-2"
-                aria-label="Toggle Password Visibility"
-              >
-                {showPassword ? <FaEye className="text-gray-500" /> : <FaEyeSlash className="text-gray-500" />}
+                aria-label="Toggle Password Visibility">
+                {showPassword ? (
+                  <FaEye className="text-gray-500" />
+                ) : (
+                  <FaEyeSlash className="text-gray-500" />
+                )}
               </button>
             </div>
           </div>
           {/* CRN Input */}
           <div className="mb-4">
-            <label htmlFor="crn" className={`block text-sm font-medium ${darkMode ? "text-white" : "text-gray-700"}`}>
+            <label
+              htmlFor="crn"
+              className={`block text-sm font-medium ${darkMode ? "text-white" : "text-gray-700"}`}>
               CRN
             </label>
             <input
@@ -144,7 +167,9 @@ const SignUp: React.FC = () => {
           </div>
           {/* URN Input */}
           <div className="mb-4">
-            <label htmlFor="urn" className={`block text-sm font-medium ${darkMode ? "text-white" : "text-gray-700"}`}>
+            <label
+              htmlFor="urn"
+              className={`block text-sm font-medium ${darkMode ? "text-white" : "text-gray-700"}`}>
               URN
             </label>
             <input
@@ -160,14 +185,12 @@ const SignUp: React.FC = () => {
           <div className="space-y-4">
             <button
               type="submit"
-              className={`w-full py-2 rounded-lg shadow-md transition duration-300 ease-in-out ${darkMode ? "bg-blue-500 hover:bg-blue-700 text-white" : "bg-red-500 hover:bg-red-700 text-white"}`}
-            >
+              className={`w-full py-2 rounded-lg shadow-md transition duration-300 ease-in-out ${darkMode ? "bg-blue-500 hover:bg-blue-700 text-white" : "bg-red-500 hover:bg-red-700 text-white"}`}>
               Sign Up
             </button>
             <div className="text-center text-sm">OR</div>
             <button
-              className={`w-full py-2 rounded-lg shadow-md transition duration-300 ease-in-out ${darkMode ? "bg-blue-500 hover:bg-blue-700 text-white" : "bg-red-500 hover:bg-red-700 text-white"}`}
-            >
+              className={`w-full py-2 rounded-lg shadow-md transition duration-300 ease-in-out ${darkMode ? "bg-blue-500 hover:bg-blue-700 text-white" : "bg-red-500 hover:bg-red-700 text-white"}`}>
               <Link to="/login">Login</Link>
             </button>
           </div>

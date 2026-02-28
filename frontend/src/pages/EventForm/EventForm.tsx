@@ -1,23 +1,16 @@
-"use client";
-
 import { useEffect, useState } from "react";
-import { Bold, Heading1, Italic, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/utils/utils";
+import { cn } from "@/lib/utils";
 import axios from "axios";
-import { Navigate } from "react-router";
 import { useParams } from "react-router-dom";
+import { API_BASE_URL } from "@/config/api";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
-
 export default function EventForm() {
   const { event_id } = useParams(); // Extract event_id from the URL
-  const [coverImage, setCoverImage] = useState<File | null>(null);
   const [dayName, setDayName] = useState("");
   const [dateToday, setDateToday] = useState("");
   const [clubName, setClubName] = useState("");
@@ -34,15 +27,13 @@ export default function EventForm() {
     poster: null,
   });
 
-  const fillInitialData = async() => {
-    if(!event_id) return
-    const response = await axios.get(`http://localhost:8000/events/${event_id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    )
+  const fillInitialData = async () => {
+    if (!event_id) return;
+    const response = await axios.get(`${API_BASE_URL}/events/${event_id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
     setFormData({
       name: response.data.name || "",
       description: response.data.description || "",
@@ -54,15 +45,36 @@ export default function EventForm() {
       team_size: response.data.team_size || "",
       registration_url: response.data.registration_url || "",
       poster: null,
-    })
-  }
-  useEffect(() =>{
+    });
+  };
+  useEffect(() => {
     fillInitialData();
-  },[]);
+  }, []);
 
   useEffect(() => {
-    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const days = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
 
     const today = new Date();
     const dayName = days[today.getDay()];
@@ -75,50 +87,48 @@ export default function EventForm() {
     setDayName(dayName);
   }, []);
 
-  // getUserDetails 
-  const getUserDetails = async() => {
+  // getUserDetails
+  const getUserDetails = async () => {
     // fetch user details from server
     try {
-      const response = await axios.get("http://localhost:8000/auth/me",
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-      console.log(response.data.name)
-      setClubName(response.data.name)
+      const response = await axios.get(`${API_BASE_URL}/auth/me`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      console.log(response.data.name);
+      setClubName(response.data.name);
       // set user details in state
     } catch (err: any) {
       console.log(`Failed to load user details:${err}`);
     } finally {
     }
-  }
-  useEffect(()=>{
-      getUserDetails(); 
-  },[])
+  };
+  useEffect(() => {
+    getUserDetails();
+  }, []);
 
-  const handleChange = (e:any) => {
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-  
-  const handleFileChange = (e:any) => {
+
+  const handleFileChange = (e: any) => {
     setFormData((prev) => ({ ...prev, poster: e.target.files[0] }));
   };
-  
-  const handleSubmit = async (e:any) => {
+
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     const formDataToSend = new FormData();
-    
-    Object.keys(formData).forEach((key:any) => {
-      formDataToSend.append(key, formData[key]);
+
+    Object.keys(formData).forEach((key: any) => {
+      formDataToSend.append(key, (formData as any)[key]);
     });
-  
-    if(!event_id){
+
+    if (!event_id) {
       try {
-        await axios.post("http://localhost:8000/events/new", formDataToSend, {
-          headers: { 
+        await axios.post(`${API_BASE_URL}/events/new`, formDataToSend, {
+          headers: {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -139,15 +149,18 @@ export default function EventForm() {
       } catch (error) {
         console.error("Error creating event:", error);
       }
-    }
-    else{
+    } else {
       try {
-        await axios.patch(`http://localhost:8000/events/${event_id}`, formDataToSend, {
-          headers: { 
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+        await axios.patch(
+          `${API_BASE_URL}/events/${event_id}`,
+          formDataToSend,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
           },
-        });
+        );
         alert("Event Updated successfully!");
       } catch (error) {
         console.error("Error creating event:", error);
@@ -163,7 +176,9 @@ export default function EventForm() {
           <h1 className="text-[20px] font-bold tracking-tight">{clubName}</h1>
           <div className="text-right">
             <p className="text-[15px] font-medium">{dayName}</p>
-            <p className="text-[13px] text-gray-600 whitespace-nowrap">{dateToday}</p>
+            <p className="text-[13px] text-gray-600 whitespace-nowrap">
+              {dateToday}
+            </p>
           </div>
         </div>
 
@@ -200,32 +215,38 @@ export default function EventForm() {
                 />
               </div> */}
 
-                    <div>
-                      <Label className="text-xs font-medium text-gray-500">DESCRIPTION</Label>
-                      <div className="mt-1.5 border border-gray-200 overflow-hidden">
-                        <ReactQuill
-                          value={formData.description}
-                          onChange={(value:any)=> setFormData((prev) => ({ ...prev, "description": value }))}
-                          modules={{
-                            toolbar: [
-                              ["bold", "italic", "underline"], // Formatting buttons
-                              [{ header: [1, 2, false] }], // Heading options
-                              [{ list: "ordered" }, { list: "bullet" }], // Lists
-                              ["link"], // Links
-                            ],
-                          }}
-                          className="bg-white"
-                        />
-                      </div>
-                    </div>
-                  <div>
+              <div>
+                <Label className="text-xs font-medium text-gray-500">
+                  DESCRIPTION
+                </Label>
+                <div className="mt-1.5 border border-gray-200 overflow-hidden">
+                  <ReactQuill
+                    value={formData.description}
+                    onChange={(value: any) =>
+                      setFormData((prev) => ({ ...prev, description: value }))
+                    }
+                    modules={{
+                      toolbar: [
+                        ["bold", "italic", "underline"], // Formatting buttons
+                        [{ header: [1, 2, false] }], // Heading options
+                        [{ list: "ordered" }, { list: "bullet" }], // Lists
+                        ["link"], // Links
+                      ],
+                    }}
+                    className="bg-white"
+                  />
+                </div>
+              </div>
+              <div>
                 <Label className="text-xs font-medium text-gray-500">
                   Rules (Optional)
                 </Label>
                 <div className="mt-1.5 border border-gray-200 overflow-hidden">
                   <ReactQuill
                     value={formData.rules}
-                    onChange={(value:any)=> setFormData((prev) => ({ ...prev, "rules": value }))}
+                    onChange={(value: any) =>
+                      setFormData((prev) => ({ ...prev, rules: value }))
+                    }
                     modules={{
                       toolbar: [
                         ["bold", "italic", "underline"], // Formatting buttons
@@ -325,9 +346,13 @@ export default function EventForm() {
                 "mt-1.5 border-2 border-dashed border-[#4F46E5] rounded-lg p-8",
                 "flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50/50",
               )}
-              onClick={() => document.getElementById("file-upload")?.click()}
-            >
-              <input type="file" name="poster" accept="image/*" onChange={handleFileChange} />
+              onClick={() => document.getElementById("file-upload")?.click()}>
+              <input
+                type="file"
+                name="poster"
+                accept="image/*"
+                onChange={handleFileChange}
+              />
               <p className="mt-2 text-sm text-[#4F46E5]">
                 Drag and drop or click to choose
               </p>
@@ -373,20 +398,17 @@ export default function EventForm() {
           <div className="flex justify-between gap-4 pt-6">
             <Button
               variant="ghost"
-              className="flex-1 bg-[#EEF2FF] hover:bg-[#EEF2FF]/90 text-gray-700 font-medium"
-            >
+              className="flex-1 bg-[#EEF2FF] hover:bg-[#EEF2FF]/90 text-gray-700 font-medium">
               Cancel
             </Button>
             <Button
               variant="ghost"
-              className="flex-1 bg-[#ECFDF5] hover:bg-[#ECFDF5]/90 text-gray-700 font-medium"
-            >
+              className="flex-1 bg-[#ECFDF5] hover:bg-[#ECFDF5]/90 text-gray-700 font-medium">
               Save as Draft
             </Button>
             <Button
               className="flex-1 bg-[#4F46E5] hover:bg-[#4F46E5]/90 text-white font-medium"
-              onClick={handleSubmit}
-            >
+              onClick={handleSubmit}>
               Upload Post
             </Button>
           </div>
@@ -396,8 +418,7 @@ export default function EventForm() {
             Need help setting up? Email us,{" "}
             <a
               href="mailto:Community@ClubHub.com"
-              className="text-[#4F46E5] hover:underline"
-            >
+              className="text-[#4F46E5] hover:underline">
               Community@ClubHub.com
             </a>
           </p>

@@ -1,5 +1,5 @@
-import React from "react";
-import './MobileCarouselCard.css';
+import type { FC } from "react";
+import "./MobileCarouselCard.css";
 import { FaRegClock } from "react-icons/fa";
 import { useMediaQuery } from "react-responsive";
 import { useNavigate } from "react-router-dom";
@@ -17,27 +17,29 @@ interface EventCardProps {
   imageUrl: string;
 }
 
-const EventCard: React.FC<EventCardProps> = ({
+const EventCard: FC<EventCardProps> = ({
   id,
-  eventType,
   eventName,
   dateTime,
   clubName,
-  description,
   daysLeft,
   instagramUrl,
-  imageUrl
+  imageUrl,
 }) => {
-    const navigate = useNavigate();
-    const isVerySmall = useMediaQuery({
-      query: '(max-width: 450px)'
-    })
+  const navigate = useNavigate();
+  const isVerySmall = useMediaQuery({
+    query: "(max-width: 450px)",
+  });
   return (
     <div className="mobile-event-card">
       <div className="mobile-event-header">
         {/* Left Section: Club Logo */}
         <div className="mobile-event-logo-container">
-          <img src={'/gndec.svg'} alt="Club Logo" className="min-w-10 mobile-event-logo" />
+          <img
+            src={"/gndec.svg"}
+            alt="Club Logo"
+            className="min-w-10 mobile-event-logo"
+          />
         </div>
 
         {/* Middle Section: Event Details */}
@@ -50,21 +52,28 @@ const EventCard: React.FC<EventCardProps> = ({
         {/* Right Section: Instagram Icon */}
         <div className="mobile-instagram-container">
           <a href={instagramUrl} target="_blank" rel="noopener noreferrer">
-            <img src="/instagram.png" alt="Instagram" className="mobile-instagram-icon" />
+            <img
+              src="/instagram.png"
+              alt="Instagram"
+              className="mobile-instagram-icon"
+            />
           </a>
         </div>
       </div>
 
       <div
         className="w-full h-[175px] mt-5 mr-5 rounded-2xl"
-        style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-      >
-            <img
-              src={imageUrl}
-              alt={`${eventName} Image`}
-              className="w-full h-full rounded-md"
-            />
-        </div>
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}>
+        <img
+          src={imageUrl}
+          alt={`${eventName} Image`}
+          className="w-full h-full rounded-md"
+        />
+      </div>
 
       {/* Footer Section */}
       <div className="mobile-event-footer">
@@ -72,7 +81,11 @@ const EventCard: React.FC<EventCardProps> = ({
           <FaRegClock className="mr-1" /> {daysLeft} days left
         </p>
         <div className="mobile-event-actions">
-          <button className="mobile-read-more-button" onClick={()=>navigate(`/event/${id}`)}>{isVerySmall?"View":"Read more"}</button>
+          <button
+            className="mobile-read-more-button"
+            onClick={() => navigate(`/event/${id}`)}>
+            {isVerySmall ? "View" : "Read more"}
+          </button>
           <button className="mobile-apply-button">Apply</button>
         </div>
       </div>

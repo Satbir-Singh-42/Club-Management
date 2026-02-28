@@ -1,10 +1,9 @@
-import React from "react";
-import './DashEventCard.css';
+import type { FC } from "react";
+import "./DashEventCard.css";
 import { FaRegClock } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { useNavigate } from "react-router";
-import axios from "axios";
 
 interface EventCardProps {
   id: number;
@@ -19,7 +18,7 @@ interface EventCardProps {
   onDeleteEvent: any;
 }
 
-const EventCard: React.FC<EventCardProps> = ({
+const EventCard: FC<EventCardProps> = ({
   id,
   eventType,
   eventName,
@@ -28,19 +27,16 @@ const EventCard: React.FC<EventCardProps> = ({
   description,
   daysLeft,
   instagramUrl,
-  logoUrl,
   onDeleteEvent,
 }) => {
   const navigate = useNavigate();
-
-  
 
   return (
     <div className="event-card">
       <div className="event-header">
         {/* Left Section: Club Logo */}
         <div className="event-logo-container">
-          <img src={'/gndec.svg'} alt="Club Logo" className="event-logo" />
+          <img src={"/gndec.svg"} alt="Club Logo" className="event-logo" />
         </div>
 
         {/* Middle Section: Event Details */}
@@ -54,7 +50,11 @@ const EventCard: React.FC<EventCardProps> = ({
         {/* Right Section: Instagram Icon */}
         <div className="instagram-container">
           <a href={instagramUrl} target="_blank" rel="noopener noreferrer">
-            <img src="/instagram.png" alt="Instagram" className="instagram-icon" />
+            <img
+              src="/instagram.png"
+              alt="Instagram"
+              className="instagram-icon"
+            />
           </a>
         </div>
       </div>
@@ -70,17 +70,23 @@ const EventCard: React.FC<EventCardProps> = ({
           <FaRegClock className="mr-1" /> {daysLeft} days left
         </p>
         <div className="event-actions">
-          <button className="bg-blue-500 text-white py-2 px-2 rounded-md shadow hover:bg-blue-600">View</button>
+          <button className="bg-blue-500 text-white py-2 px-2 rounded-md shadow hover:bg-blue-600">
+            View
+          </button>
         </div>
         <div className="event-actions">
-          <button className="bg-blue-500 text-white py-2 px-2 rounded-md shadow hover:bg-blue-600"
-          onClick={() => navigate(`/event-form/${id}`)}
-          ><FaEdit size={20}/></button>
+          <button
+            className="bg-blue-500 text-white py-2 px-2 rounded-md shadow hover:bg-blue-600"
+            onClick={() => navigate(`/event-form/${id}`)}>
+            <FaEdit size={20} />
+          </button>
         </div>
         <div className="event-actions">
-          <button className="bg-blue-500 text-white py-2 px-2 rounded-md shadow hover:bg-blue-600"
-           onClick = {()=>onDeleteEvent(id)}
-          ><MdDeleteForever size={20}/></button>
+          <button
+            className="bg-blue-500 text-white py-2 px-2 rounded-md shadow hover:bg-blue-600"
+            onClick={() => onDeleteEvent(id)}>
+            <MdDeleteForever size={20} />
+          </button>
         </div>
       </div>
     </div>

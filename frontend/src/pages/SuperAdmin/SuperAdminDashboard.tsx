@@ -1,15 +1,22 @@
-import React from 'react';
-import { Users, BarChart, Calendar } from 'lucide-react'
-import { StatsCard } from "@/components/DashboardComponents/StatsCard"
-import { EventGraph } from "@/components/DashboardComponents/EventGraph"
+import { Users, BarChart, Calendar } from "lucide-react";
+import { StatsCard } from "@/components/DashboardComponents/StatsCard";
+import { EventGraph } from "@/components/DashboardComponents/EventGraph";
 
 const recentClubs = [
   { name: "APEX 2023", club: "GAMING CLUB", registrations: 147 },
   { name: "ANAND UTSAV", club: "GATURE COMMITTEE", registrations: 200 },
   { name: "FUN FESTA", club: "ITAN CLUB", registrations: 100 },
-  { name: "KISME SE AKH", club: "90.8 FM COMMUNITY RADIO STATION", registrations: 204 },
-  { name: "TECH OCEAN", club: "INDIAN SOCIETY FOR TECHNICAL EDUCATION", registrations: 280 },
-]
+  {
+    name: "KISME SE AKH",
+    club: "90.8 FM COMMUNITY RADIO STATION",
+    registrations: 204,
+  },
+  {
+    name: "TECH OCEAN",
+    club: "INDIAN SOCIETY FOR TECHNICAL EDUCATION",
+    registrations: 280,
+  },
+];
 
 export default function Dashboard() {
   return (
@@ -45,21 +52,27 @@ export default function Dashboard() {
         <div className="col-span-2">
           <EventGraph />
         </div>
-        <div className="rounded-lg border bg-card p-6 shadow-md"> {/* Added shadow-md */}
+        <div className="rounded-lg border bg-card p-6 shadow-md">
+          {" "}
+          {/* Added shadow-md */}
           <div className="text-lg font-semibold">Recent Clubs Post</div>
           <div className="mt-4 space-y-4">
             {recentClubs.map((club, index) => (
               <div key={index} className="flex items-center justify-between">
                 <div>
                   <div className="font-medium">{club.name}</div>
-                  <div className="text-sm text-muted-foreground">{club.club}</div>
+                  <div className="text-sm text-muted-foreground">
+                    {club.club}
+                  </div>
                 </div>
-                <div className="text-sm">{club.registrations} Registrations</div>
+                <div className="text-sm">
+                  {club.registrations} Registrations
+                </div>
               </div>
             ))}
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

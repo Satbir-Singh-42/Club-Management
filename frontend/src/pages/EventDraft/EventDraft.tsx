@@ -1,9 +1,15 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar/Navbar"; // Navbar component
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { Calendar, Clock, MapPin, Pencil, Trash2, Link, ImageIcon } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+import { Clock, MapPin, Pencil, Trash2, Link, ImageIcon } from "lucide-react";
 import axios from "axios";
+import { API_BASE_URL } from "@/config/api";
 
 // This would typically come from an API or database
 
@@ -11,46 +17,47 @@ export default function DraftsPage() {
   const [clubId, setClubId] = useState<number | null>(null);
   const [eventData, setEventData] = useState<any>([]);
 
-  useEffect(()=>{
+  useEffect(() => {
     fillInitialData();
-  },[])
-  
-  useEffect(()=>{
-    fetchEvents();
-  },[clubId]);
+  }, []);
 
-  const fillInitialData = async() => {
+  useEffect(() => {
+    fetchEvents();
+  }, [clubId]);
+
+  const fillInitialData = async () => {
     try {
-      const response:any = await axios.get("http://localhost:8000/auth/me",
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const response: any = await axios.get(`${API_BASE_URL}/auth/me`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       console.log("response: ", response);
       console.log(response.data.id);
       setClubId(response.data.id);
     } catch (err: any) {
       console.log(`Failed to load user details:${err}`);
-    } 
-  }
+    }
+  };
 
   const fetchEvents = async () => {
     try {
       console.log("Club ID:", clubId);
-      const response = await axios.get<any>("http://localhost:8000/events/drafts/events", {
-        params: {
-          club_id: clubId,
+      const response = await axios.get<any>(
+        `${API_BASE_URL}/events/drafts/events`,
+        {
+          params: {
+            club_id: clubId,
+          },
         },
-      });
+      );
 
       const fetchedEvents = response.data.map((event: any) => ({
         id: event.id,
         name: event.name,
         tagline: event.tagline,
         about: event.description,
-        venue: event.venue,        
+        venue: event.venue,
         time: `${event.date} ${event.time}`,
         instagram: event.club?.instagram_url,
         coverImage: event.poster,
@@ -58,7 +65,6 @@ export default function DraftsPage() {
       }));
 
       setEventData(fetchedEvents);
-
     } catch (error) {
       console.error("Failed to fetch events:", error);
     }
@@ -77,16 +83,19 @@ export default function DraftsPage() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
-          {eventData.map((post:any) => (
+          {eventData.map((post: any) => (
             <Card key={post.id} className="bg-white shadow-lg">
               <CardHeader className="border-b">
                 <div className="flex justify-between items-start">
                   <div>
                     <h2 className="text-xl font-bold">{post.name}</h2>
-                    <p className="text-sm text-muted-foreground">{post.tagline}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {post.tagline}
+                    </p>
                   </div>
                   <span className="text-sm text-muted-foreground">
-                    Last edited: {new Date(post.lastEdited).toLocaleDateString()}
+                    Last edited:{" "}
+                    {new Date(post.lastEdited).toLocaleDateString()}
                   </span>
                 </div>
               </CardHeader>
@@ -110,7 +119,6 @@ export default function DraftsPage() {
                   <p className="text-sm line-clamp-2">{post.about}</p>
 
                   <div className="grid gap-2 text-sm">
-                 
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <MapPin className="h-4 w-4" />
                       <span>{post.venue}</span>
@@ -121,7 +129,7 @@ export default function DraftsPage() {
                       <span>{new Date(post.time).toLocaleTimeString()}</span>
                     </div>
 
-                    {(post.instagram) && (
+                    {post.instagram && (
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <Link className="h-4 w-4" />
                         <span>Social media links added</span>

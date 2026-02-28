@@ -1,16 +1,25 @@
-import { cn } from "@/lib/utils"
-import { TypeIcon as type, LucideIcon } from 'lucide-react'
+import { cn } from "@/lib/utils";
+import { LucideIcon } from "lucide-react";
 
 interface StatsCardProps {
-  title: string
-  value: string
-  icon: LucideIcon
-  className?: string
+  title: string;
+  value: string;
+  icon: LucideIcon;
+  className?: string;
 }
 
-export function StatsCard({ title, value, icon: Icon, className }: StatsCardProps) {
+export function StatsCard({
+  title,
+  value,
+  icon: Icon,
+  className,
+}: StatsCardProps) {
   return (
-    <div className={cn("flex items-center gap-4 rounded-lg p-6 shadow-md", className)}>
+    <div
+      className={cn(
+        "flex items-center gap-4 rounded-lg p-6 shadow-md",
+        className,
+      )}>
       <div className="rounded-full bg-white p-2">
         <Icon className="h-6 w-6" />
       </div>
@@ -19,5 +28,5 @@ export function StatsCard({ title, value, icon: Icon, className }: StatsCardProp
         <div className="text-sm text-muted-foreground">{title}</div>
       </div>
     </div>
-  )
+  );
 }

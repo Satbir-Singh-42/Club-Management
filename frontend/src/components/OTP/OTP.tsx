@@ -1,7 +1,8 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaMoon, FaSun } from "react-icons/fa";
+import { API_BASE_URL } from "@/config/api";
 
 const Otp: React.FC = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -31,12 +32,12 @@ const Otp: React.FC = () => {
     }
   };
 
-  const handleOtpSubmit = async(e: React.FormEvent) => {
+  const handleOtpSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const enteredOtp = otp.join("");
     const data = { student_id: studentId, otp: enteredOtp };
     try {
-      const response = await fetch(`http://localhost:8000/register/verify`, {
+      const response = await fetch(`${API_BASE_URL}/register/verify`, {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -56,9 +57,11 @@ const Otp: React.FC = () => {
   };
 
   return (
-    <div className={`${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"} min-h-screen flex flex-col items-center justify-center p-4`}>
+    <div
+      className={`${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"} min-h-screen flex flex-col items-center justify-center p-4`}>
       {/* OTP Form Container */}
-      <div className={`${darkMode ? "bg-gray-800" : "bg-white"} p-6 rounded-lg shadow-lg text-center w-full max-w-md`}>
+      <div
+        className={`${darkMode ? "bg-gray-800" : "bg-white"} p-6 rounded-lg shadow-lg text-center w-full max-w-md`}>
         {/* Logo */}
         <img
           src="https://via.placeholder.com/150" // Replace with your logo URL
@@ -72,8 +75,7 @@ const Otp: React.FC = () => {
         {/* Dark Mode Toggle Button */}
         <button
           onClick={() => setDarkMode(!darkMode)}
-          className="absolute top-4 right-4 text-xl"
-        >
+          className="absolute top-4 right-4 text-xl">
           {darkMode ? <FaSun /> : <FaMoon />}
         </button>
 
@@ -114,8 +116,7 @@ const Otp: React.FC = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className={`${darkMode ? "bg-red-600" : "bg-red-500"} text-white py-2 rounded-md mt-8 hover:bg-red-600`}
-          >
+            className={`${darkMode ? "bg-red-600" : "bg-red-500"} text-white py-2 rounded-md mt-8 hover:bg-red-600`}>
             Validate OTP
           </button>
         </form>

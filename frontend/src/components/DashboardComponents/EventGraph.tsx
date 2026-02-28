@@ -1,6 +1,14 @@
-import React from "react";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from "recharts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+  Legend,
+} from "recharts";
 
 // Sample data for the BarChart
 const data = [
@@ -28,21 +36,39 @@ export function EventGraph() {
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data}>
             {/* Subtle grid lines for a clean background */}
-            <CartesianGrid horizontal={true} vertical={false} strokeDasharray="4 4" stroke="#E5E7EB" />
-            <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: "#4B5563" }} />
-            <YAxis axisLine={false} tickLine={false} tick={{ fill: "#4B5563" }} />
-            <Tooltip 
-              contentStyle={{ backgroundColor: "#333", borderRadius: "8px", padding: "8px" }} 
-              labelStyle={{ color: "#fff" }} 
-              itemStyle={{ color: "#fff" }} 
+            <CartesianGrid
+              horizontal={true}
+              vertical={false}
+              strokeDasharray="4 4"
+              stroke="#E5E7EB"
+            />
+            <XAxis
+              dataKey="month"
+              axisLine={false}
+              tickLine={false}
+              tick={{ fill: "#4B5563" }}
+            />
+            <YAxis
+              axisLine={false}
+              tickLine={false}
+              tick={{ fill: "#4B5563" }}
+            />
+            <Tooltip
+              contentStyle={{
+                backgroundColor: "#333",
+                borderRadius: "8px",
+                padding: "8px",
+              }}
+              labelStyle={{ color: "#fff" }}
+              itemStyle={{ color: "#fff" }}
             />
             <Legend verticalAlign="top" height={36} />
             {/* Remove the value label from the Bar */}
-            <Bar 
-              dataKey="value" 
-              fill="#A9A9A9" 
-              radius={[6, 6, 0, 0]} 
-              barSize={30} 
+            <Bar
+              dataKey="value"
+              fill="#A9A9A9"
+              radius={[6, 6, 0, 0]}
+              barSize={30}
               className="transition-all duration-300 hover:opacity-80"
             />
           </BarChart>

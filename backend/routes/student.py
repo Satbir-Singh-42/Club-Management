@@ -1,13 +1,5 @@
 from typing import Annotated, Optional
-from fastapi import (
-    APIRouter,
-    Depends,
-    HTTPException,
-    Query,
-    Form,
-    status,
-    Body
-)
+from fastapi import APIRouter, Depends, Form, HTTPException, status
 from backend.database import DBSession
 from backend.models.student import (
     StudentModel,
@@ -92,11 +84,18 @@ async def create_student(
         batch=data.batch,
         phone=str(data.phone) if data.phone else None,
         profile_photo=profile_photo_path,
-        all_details_completed=all([
-            data.name, data.crn, data.urn,
-            data.branch, data.gender, data.batch,
-            data.phone, profile_photo_path
-        ])
+        all_details_completed=all(
+            [
+                data.name,
+                data.crn,
+                data.urn,
+                data.branch,
+                data.gender,
+                data.batch,
+                data.phone,
+                profile_photo_path,
+            ]
+        ),
     )
 
     session.add(new_student)
@@ -198,11 +197,18 @@ async def update_student(
         setattr(student, key, value)
 
     # Update all_details_completed status
-    student.all_details_completed = all([
-        student.name, student.crn, student.urn,
-        student.branch, student.gender, student.batch,
-        student.phone, student.profile_photo
-    ])
+    student.all_details_completed = all(
+        [
+            student.name,
+            student.crn,
+            student.urn,
+            student.branch,
+            student.gender,
+            student.batch,
+            student.phone,
+            student.profile_photo,
+        ]
+    )
 
     student.updated_at = datetime.now()
     session.add(student)

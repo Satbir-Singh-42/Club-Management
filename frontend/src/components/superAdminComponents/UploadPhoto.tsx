@@ -1,48 +1,51 @@
-import React, { useState } from 'react'
-import { Upload } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import React, { useState } from "react";
+import { Upload } from "lucide-react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
+} from "@/components/ui/dialog";
 
 interface UploadPhotoProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  onUpload: (file: File) => void
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onUpload: (file: File) => void;
 }
 
-export function UploadPhoto({ open, onOpenChange, onUpload }: UploadPhotoProps) {
-  const [dragActive, setDragActive] = useState(false)
+export function UploadPhoto({
+  open,
+  onOpenChange,
+  onUpload,
+}: UploadPhotoProps) {
+  const [dragActive, setDragActive] = useState(false);
 
   function handleDrag(e: React.DragEvent) {
-    e.preventDefault()
-    e.stopPropagation()
+    e.preventDefault();
+    e.stopPropagation();
     if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true)
+      setDragActive(true);
     } else if (e.type === "dragleave") {
-      setDragActive(false)
+      setDragActive(false);
     }
   }
 
   function handleDrop(e: React.DragEvent) {
-    e.preventDefault()
-    e.stopPropagation()
-    setDragActive(false)
-    
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      onUpload(e.dataTransfer.files[0])
-      onOpenChange(false)
+      onUpload(e.dataTransfer.files[0]);
+      onOpenChange(false);
     }
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    e.preventDefault()
+    e.preventDefault();
     if (e.target.files && e.target.files[0]) {
-      onUpload(e.target.files[0])
-      onOpenChange(false)
+      onUpload(e.target.files[0]);
+      onOpenChange(false);
     }
   }
 
@@ -59,8 +62,7 @@ export function UploadPhoto({ open, onOpenChange, onUpload }: UploadPhotoProps) 
           onDragEnter={handleDrag}
           onDragLeave={handleDrag}
           onDragOver={handleDrag}
-          onDrop={handleDrop}
-        >
+          onDrop={handleDrop}>
           <div className="grid place-items-center gap-2">
             <Upload className="h-8 w-8 text-muted-foreground" />
             <p className="text-sm text-muted-foreground">
@@ -77,6 +79,5 @@ export function UploadPhoto({ open, onOpenChange, onUpload }: UploadPhotoProps) 
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
-

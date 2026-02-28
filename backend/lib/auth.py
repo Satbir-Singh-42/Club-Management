@@ -6,13 +6,10 @@ import bcrypt
 from fastapi.security import OAuth2PasswordBearer
 from sqlmodel import select
 from datetime import datetime, timedelta
-import sys
 
 from backend.config import ACCESS_TOKEN_EXPIRE_MINUTES, HASHING_ALGORITHM
 from backend.database import DBSession
-from backend.models import StudentModel
-from backend.models import ClubModel
-from backend.models.admin import AdminModel
+from backend.models import StudentModel, ClubModel, AdminModel
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
@@ -102,10 +99,10 @@ def get_user_auth(
 
         return user
     except jwt.PyJWTError as e:
-        print(e, file=sys.stderr)
+        print(f"JWT Error: {e}")
         raise credentials_exception(e)
     except Exception as e:
-        print(e, file=sys.stderr)
+        print(f"Auth Error: {e}")
         raise credentials_exception(e)
 
 

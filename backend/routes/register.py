@@ -189,13 +189,6 @@ def verify_email(
             .order_by(VerificationModel.created_at.desc())
         ).first()
 
-        # Get the latest verification record
-        verification = session.exec(
-            select(VerificationModel)
-            .where(VerificationModel.student_id == student_id)
-            .order_by(VerificationModel.created_at.desc())
-        ).first()
-
         if not verification:
             raise HTTPException(
                 status_code=404,

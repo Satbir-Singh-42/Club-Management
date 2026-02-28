@@ -12,7 +12,7 @@ export const exportToExcel = (data: Student[], fileName: string) => {
 
 export const exportToPDF = (data: Student[], fileName: string) => {
   const doc = new jsPDF();
-  doc.autoTable({
+  (doc as any).autoTable({
     head: [
       [
         "Name",

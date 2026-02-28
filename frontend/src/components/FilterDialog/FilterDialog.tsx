@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { API_BASE_URL } from "@/config/api";
 
 const FilterDialog = ({ isOpen, onClose, onFilterChange }: any) => {
   const [clubs, setClubs] = useState<{ value: string; label: string }[]>([]);
@@ -11,7 +12,9 @@ const FilterDialog = ({ isOpen, onClose, onFilterChange }: any) => {
     sort_by: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target;
     setFilters((prev: any) => ({ ...prev, [name]: value }));
   };
@@ -24,7 +27,7 @@ const FilterDialog = ({ isOpen, onClose, onFilterChange }: any) => {
   useEffect(() => {
     const fetchClubs = async () => {
       try {
-        const response = await axios.get<any>("http://localhost:8000/clubs");
+        const response = await axios.get<any>(`${API_BASE_URL}/clubs`);
         setClubs([
           { value: "", label: "All Clubs" }, // Default option
           ...response.data.map((club: any) => ({
@@ -67,8 +70,7 @@ const FilterDialog = ({ isOpen, onClose, onFilterChange }: any) => {
                 name="club_id"
                 value={filters.club_id}
                 onChange={handleChange}
-                className="border p-2 rounded-md w-full mt-1"
-              >
+                className="border p-2 rounded-md w-full mt-1">
                 {clubs.map((club: any) => (
                   <option key={club.value} value={club.value}>
                     {club.label}
@@ -108,8 +110,7 @@ const FilterDialog = ({ isOpen, onClose, onFilterChange }: any) => {
                 name="sort_by"
                 value={filters.sort_by}
                 onChange={handleChange}
-                className="border p-2 rounded-md w-full mt-1"
-              >
+                className="border p-2 rounded-md w-full mt-1">
                 <option value="-date">Date (Descending)</option>
                 <option value="date">Date (Ascending)</option>
                 <option value="-name">Name (Z-A)</option>
@@ -121,14 +122,12 @@ const FilterDialog = ({ isOpen, onClose, onFilterChange }: any) => {
             <div className="flex justify-end gap-3 mt-4">
               <button
                 onClick={onClose}
-                className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400 transition"
-              >
+                className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400 transition">
                 Cancel
               </button>
               <button
                 onClick={applyFilters}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
-              >
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
                 Apply
               </button>
             </div>

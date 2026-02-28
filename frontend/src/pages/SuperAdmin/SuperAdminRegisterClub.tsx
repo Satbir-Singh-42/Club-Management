@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import axios from "axios";
+import { API_BASE_URL } from "@/config/api";
 
 interface Club {
   id: number;
@@ -34,75 +35,77 @@ export default function RegisterClub() {
   const [showPassword, setShowPassword] = useState(false);
   const [recentClubs, setRecentClubs] = useState<Club[]>([]);
   const form = useForm();
-  const { register, handleSubmit, watch, reset, formState: { errors, isSubmitting } } = form;
-  const logoFile = watch("logo");
-
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = form;
   const onSubmit = async (data: any) => {
     try {
-        console.log("Request Payload:", data);
-        const formData = new FormData();
-        formData.append("name", data.name);
-        formData.append("email", data.email);
-        formData.append("password", data.password);
-        formData.append("logo", data.logo[0]);
-        formData.append("acronym", data.acronym);
-        // Convert data to FormData
-        const response = await axios.post(
-            'http://localhost:8000/clubs/new',
-            formData,
-            {
-                headers: {
-                    // ❌ Remove 'Content-Type': 'application/json'
-                    // ✅ Let the browser set 'Content-Type' automatically for FormData
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-            }
-        );
-  
-        console.log("Club Created Successfully", response.data);
-        reset();
-        getRecentClubData();
+      console.log("Request Payload:", data);
+      const formData = new FormData();
+      formData.append("name", data.name);
+      formData.append("email", data.email);
+      formData.append("password", data.password);
+      formData.append("logo", data.logo[0]);
+      formData.append("acronym", data.acronym);
+      // Convert data to FormData
+      const response = await axios.post(`${API_BASE_URL}/clubs/new`, formData, {
+        headers: {
+          // ❌ Remove 'Content-Type': 'application/json'
+          // ✅ Let the browser set 'Content-Type' automatically for FormData
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      console.log("Club Created Successfully", response.data);
+      reset();
+      getRecentClubData();
     } catch (error: any) {
-        console.error("Error Creating User:", error.response?.data || error.message);
+      console.error(
+        "Error Creating User:",
+        error.response?.data || error.message,
+      );
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     getRecentClubData();
-  },[])
+  }, []);
 
-  const getRecentClubData = async() => {
+  const getRecentClubData = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/clubs/',
-        {
-          params: {
-            skip: 0,
-            limit: 10,
-            sort_by: '-created_at',
-          },
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          },
-        }
-      )
-      const fetchedClubs = response.data.map((club:any) => ({
+      const response = await axios.get(`${API_BASE_URL}/clubs/`, {
+        params: {
+          skip: 0,
+          limit: 10,
+          sort_by: "-created_at",
+        },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      const fetchedClubs = response.data.map((club: any) => ({
         id: club.id,
         name: club.name,
         email: club.email,
         dateCreated: club.created_at.split("T")[0],
         timeCreated: club.created_at.split("T")[1].split(".")[0],
-      }))
+      }));
 
       setRecentClubs(fetchedClubs);
-    } catch (error:any) {
-      console.log("Error Fetching Clubs: ", error.message)
+    } catch (error: any) {
+      console.log("Error Fetching Clubs: ", error.message);
     }
-  }
+  };
 
   return (
     <div className="container mx-auto p-8">
-      <h2 className="text-2xl font-bold mb-6 text-center">Create Club Account</h2>
+      <h2 className="text-2xl font-bold mb-6 text-center">
+        Create Club Account
+      </h2>
       <div className="grid gap-8 md:grid-cols-2">
         {/* Club Registration Card */}
         <Card>
@@ -151,15 +154,21 @@ export default function RegisterClub() {
                 <FormItem>
                   <FormLabel>Logo</FormLabel>
                   <FormControl>
-                    <Input 
+                    <Input
                       type="file"
                       accept="image/*" // ✅ Restrict to images only
                       {...register("logo", { required: "Logo is Required" })}
                     />
                   </FormControl>
-                  {errors.logo && <FormMessage >{typeof errors.logo.message==="string"? errors.logo.message:"Invalid Input"}</FormMessage>}
+                  {errors.logo && (
+                    <FormMessage>
+                      {typeof errors.logo.message === "string"
+                        ? errors.logo.message
+                        : "Invalid Input"}
+                    </FormMessage>
+                  )}
                 </FormItem>
-               
+
                 <FormField
                   name="password"
                   render={({ field }) => (
@@ -177,8 +186,7 @@ export default function RegisterClub() {
                             variant="ghost"
                             size="sm"
                             className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-transparent hover:bg-transparent focus:bg-transparent focus:outline-none border-none hover:scale-110 transition-transform duration-200"
-                            onClick={() => setShowPassword(!showPassword)}
-                          >
+                            onClick={() => setShowPassword(!showPassword)}>
                             {showPassword ? (
                               <EyeOff className="h-5 w-5 text-gray-600" />
                             ) : (
@@ -194,8 +202,7 @@ export default function RegisterClub() {
                 <Button
                   type="submit"
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                  disabled={isSubmitting}
-                >
+                  disabled={isSubmitting}>
                   {isSubmitting ? "Creating..." : "Create Club Account"}
                 </Button>
               </form>
@@ -222,7 +229,7 @@ export default function RegisterClub() {
               <TableBody>
                 {recentClubs.map((admin, index) => (
                   <TableRow key={admin.id}>
-                    <TableCell>{index+1}</TableCell>
+                    <TableCell>{index + 1}</TableCell>
                     <TableCell>{admin.dateCreated}</TableCell>
                     <TableCell>{admin.timeCreated}</TableCell>
                     <TableCell>{admin.name}</TableCell>

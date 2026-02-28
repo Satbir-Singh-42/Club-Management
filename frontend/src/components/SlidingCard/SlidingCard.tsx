@@ -1,59 +1,17 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
 } from "../../components/ui/carousel";
 import CorouselEventCard from "../CorouselEventCard/CorouselEventCard";
-import MobileCarouselCard from '@/components/MobileCarouselCard/MobileCarouselCard';
-import {useMediaQuery} from 'react-responsive';
+import MobileCarouselCard from "@/components/MobileCarouselCard/MobileCarouselCard";
+import { useMediaQuery } from "react-responsive";
 
-const carouselItems = [
-  {
-    imageSrc: "/Sample.png",
-    event: {
-      eventType: "Workshop",
-      eventName: "React Basics",
-      dateTime: "Oct 4, 2024, 2:32 PM",
-      clubName: "Coding Club",
-      daysLeft: "7",
-      description: "Learn the basics of React.js in this workshop.",
-      logoUrl: "/logos/coding-club-logo.png",
-      instagramUrl: "https://instagram.com/codingclub",
-    },
-  },
-  {
-    imageSrc: "/instagram.png",
-    event: {
-      eventType: "Hackathon",
-      eventName: "Hack the Future",
-      dateTime: "Oct 6, 2024, 10:00 AM",
-      clubName: "Innovation Hub",
-      daysLeft: "5",
-      description: "Participate in an innovative hackathon event.",
-      logoUrl: "/logos/innovation-hub-logo.png",
-      instagramUrl: "https://instagram.com/innovationhub",
-    },
-  },
-  {
-    imageSrc: "/Sample.png",
-    event: {
-      eventType: "Seminar",
-      eventName: "AI Revolution",
-      dateTime: "Oct 8, 2024, 1:00 PM",
-      clubName: "Tech Society",
-      daysLeft: "3",
-      description: "Discover the latest trends in AI technology.",
-      logoUrl: "/logos/tech-society-logo.png",
-      instagramUrl: "https://instagram.com/techsociety",
-    },
-  },
-];
-
-function SlidingCard({data}:any) {
+function SlidingCard({ data }: any) {
   const isBigScreen = useMediaQuery({
-    query: '(min-width: 1024px)'
-  })
+    query: "(min-width: 1024px)",
+  });
   const [activeIndex, setActiveIndex] = useState(0); // Track active slide
   const totalItems = data.length;
   const carouselRef = useRef<HTMLDivElement>(null);
@@ -85,52 +43,87 @@ function SlidingCard({data}:any) {
           className="flex transition-transform duration-500 ease-in-out"
           style={{
             transform: `translateX(-${activeIndex * 100}%)`, // Slide effect
-          }}
-        >
-          {isBigScreen && data.map((item:any, index:any) => (
-            <CarouselItem key={index} className="flex justify-center items-center">
-              {/* Image Section */}
-              <div
-                className="w-[500px] h-[275px] mt-5 mr-5 rounded-2xl"
-                style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-              >
-                <img
-                  src={item.poster}
-                  alt={`Slide ${index + 1}`}
-                  className="w-full h-full rounded-md"
+          }}>
+          {isBigScreen &&
+            data.map((item: any, index: any) => (
+              <CarouselItem
+                key={index}
+                className="flex justify-center items-center">
+                {/* Image Section */}
+                <div
+                  className="w-[500px] h-[275px] mt-5 mr-5 rounded-2xl"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}>
+                  <img
+                    src={item.poster}
+                    alt={`Slide ${index + 1}`}
+                    className="w-full h-full rounded-md"
+                  />
+                </div>
+                {/* Card Section */}
+                <div className="w-[500px]">
+                  <CorouselEventCard
+                    eventType={item.type}
+                    eventName={item.name}
+                    dateTime={item.date + " " + item.time}
+                    id={item.id}
+                    clubName={item.club.name}
+                    description={item.description}
+                    logoUrl={item.club.logo}
+                    instagramUrl={item.club.instagram_url}
+                    daysLeft={
+                      Date.now() - item.date > 0
+                        ? `${Date.now() - item.date} Days Left`
+                        : Date.now() == item.date &&
+                            new Date().getHours() > item.time.getHours()
+                          ? `${new Date().getHours() - item.time.getHours()} Hours Left`
+                          : "0 Days Left"
+                    }
+                  />
+                </div>
+              </CarouselItem>
+            ))}
+          {!isBigScreen &&
+            data.map((item: any, index: any) => (
+              <CarouselItem
+                key={index}
+                className="flex justify-center items-center">
+                <MobileCarouselCard
+                  eventType={item.type}
+                  eventName={item.name}
+                  dateTime={item.date + " " + item.time}
+                  id={item.id}
+                  clubName={item.club.name}
+                  description={item.description}
+                  logoUrl={item.club.logo}
+                  instagramUrl={item.club.instagram_url}
+                  daysLeft={
+                    Date.now() - item.date > 0
+                      ? `${Date.now() - item.date} Days Left`
+                      : Date.now() == item.date &&
+                          new Date().getHours() > item.time.getHours()
+                        ? `${new Date().getHours() - item.time.getHours()} Hours Left`
+                        : "0 Days Left"
+                  }
+                  imageUrl={item.poster}
                 />
-              </div>
-              {/* Card Section */}
-              <div className="w-[500px]">
-                <CorouselEventCard eventType={item.type} eventName={item.name} dateTime={item.date + " " + item.time} id={item.id}
-                clubName={item.club.name} description={item.description} logoUrl={item.club.logo} instagramUrl={item.club.instagram_url}
-                daysLeft={Date.now()-item.date > 0 ? `${Date.now()-item.date} Days Left` : Date.now()==item.date && (new Date().getHours()) > item.time.getHours()? `${new Date().getHours() - item.time.getHours()} Hours Left`: "0 Days Left"}
-                />
-              </div>
-            </CarouselItem>
-          ))}
-          {!isBigScreen && data.map((item:any, index:any) => (
-            <CarouselItem key={index} className="flex justify-center items-center">
-              <MobileCarouselCard 
-                eventType={item.type} eventName={item.name} dateTime={item.date + " " + item.time} id={item.id}
-                clubName={item.club.name} description={item.description} logoUrl={item.club.logo} instagramUrl={item.club.instagram_url}
-                daysLeft={Date.now()-item.date > 0 ? `${Date.now()-item.date} Days Left` : Date.now()==item.date && (new Date().getHours()) > item.time.getHours()? `${new Date().getHours() - item.time.getHours()} Hours Left`: "0 Days Left"}
-                imageUrl={item.poster} />
-            </CarouselItem>
-          ))}
+              </CarouselItem>
+            ))}
         </CarouselContent>
       </Carousel>
 
       {/* Navigation Buttons */}
       <div className="flex justify-center mt-4 space-x-2">
-        {data.map((_:any, index:any) => (
+        {data.map((_: any, index: any) => (
           <button
             key={index}
             onClick={() => handleNavigation(index)}
             className={`w-4 h-4 rounded-full ${
               activeIndex === index ? "bg-blue-500" : "bg-gray-300"
-            }`}
-          ></button>
+            }`}></button>
         ))}
       </div>
     </div>

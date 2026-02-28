@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FaEye, FaEyeSlash, FaMoon, FaSun } from "react-icons/fa";
 import { useNavigate } from "react-router";
+import { API_BASE_URL } from "@/config/api";
 
 function PasswordChange() {
   const navigate = useNavigate();
@@ -12,17 +13,17 @@ function PasswordChange() {
   const [token, setToken] = useState("");
 
   const handlePasswordToggle = () => setShowPassword(!showPassword);
-  const handleConfirmPasswordToggle = () => setShowConfirmPassword(!showConfirmPassword);
+  const handleConfirmPasswordToggle = () =>
+    setShowConfirmPassword(!showConfirmPassword);
 
-  
-    useEffect(() => {
-      if (typeof window !== "undefined") {
-        const params = new URLSearchParams(window.location.search);
-        setToken(params.get("token") || "");
-      }
-    }, []);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      setToken(params.get("token") || "");
+    }
+  }, []);
 
-  const handleSubmit = async(e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       alert("Passwords do not match");
@@ -30,11 +31,11 @@ function PasswordChange() {
     }
 
     const formData = new FormData();
-    formData.append("token", token); 
-    formData.append("new_password", password); 
+    formData.append("token", token);
+    formData.append("new_password", password);
 
     try {
-      const response = await fetch(`http://localhost:8000/password-reset/reset`, {
+      const response = await fetch(`${API_BASE_URL}/password-reset/reset`, {
         method: "POST",
         body: formData,
       });
@@ -51,9 +52,11 @@ function PasswordChange() {
   };
 
   return (
-    <div className={`${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"} min-h-screen flex flex-col items-center justify-center`}>
+    <div
+      className={`${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"} min-h-screen flex flex-col items-center justify-center`}>
       {/* Form Container */}
-      <div className={`${darkMode ? "bg-gray-800" : "bg-white"} p-6 rounded-lg shadow-md text-center w-full max-w-md`}>
+      <div
+        className={`${darkMode ? "bg-gray-800" : "bg-white"} p-6 rounded-lg shadow-md text-center w-full max-w-md`}>
         {/* Logo */}
         <img
           src="https://via.placeholder.com/150" // Replace with your logo URL
@@ -67,8 +70,7 @@ function PasswordChange() {
         {/* Dark Mode Toggle Button */}
         <button
           onClick={() => setDarkMode(!darkMode)}
-          className="absolute top-4 right-4 text-xl"
-        >
+          className="absolute top-4 right-4 text-xl">
           {darkMode ? <FaSun /> : <FaMoon />}
         </button>
 
@@ -80,7 +82,9 @@ function PasswordChange() {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* New Password */}
           <div className="relative">
-            <label className="block text-sm font-medium mb-1">New Password</label>
+            <label className="block text-sm font-medium mb-1">
+              New Password
+            </label>
             <input
               type={showPassword ? "text" : "password"}
               value={password}
@@ -91,15 +95,16 @@ function PasswordChange() {
             <button
               type="button"
               onClick={handlePasswordToggle}
-              className="absolute right-3 bottom-3 text-gray-500 hover:text-black"
-            >
+              className="absolute right-3 bottom-3 text-gray-500 hover:text-black">
               {showPassword ? <FaEye /> : <FaEyeSlash />}
             </button>
           </div>
 
           {/* Confirm New Password */}
           <div className="relative">
-            <label className="block text-sm font-medium mb-1">New Password Confirmation</label>
+            <label className="block text-sm font-medium mb-1">
+              New Password Confirmation
+            </label>
             <input
               type={showConfirmPassword ? "text" : "password"}
               value={confirmPassword}
@@ -110,19 +115,16 @@ function PasswordChange() {
             <button
               type="button"
               onClick={handleConfirmPasswordToggle}
-              className="absolute right-3 bottom-3 text-gray-500 hover:text-black"
-            >
+              className="absolute right-3 bottom-3 text-gray-500 hover:text-black">
               {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
             </button>
           </div>
 
-<button
-  type="submit"
-  className={`${darkMode ? "bg-red-600" : "bg-red-500"} text-white py-2 mx-auto rounded-lg hover:bg-red-600 w-108`}
->
-  Submit11
-</button>
-
+          <button
+            type="submit"
+            className={`${darkMode ? "bg-red-600" : "bg-red-500"} text-white py-2 mx-auto rounded-lg hover:bg-red-600 w-108`}>
+            Submit
+          </button>
         </form>
       </div>
     </div>
